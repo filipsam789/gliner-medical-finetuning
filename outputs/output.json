@@ -1,0 +1,192 @@
+[
+  {
+    "text": "Any part of your neck  muscles, bones, joints, tendons, ligaments, or nerves  can cause neck problems. Neck pain is very common. Pain may also come from your shoulder, jaw, head, or upper arms. Muscle strain or tension often causes neck pain. The problem is usually overuse, such as from sitting at a computer for too long. Sometimes you can strain your neck muscles from sleeping in an awkward position or overdoing it during exercise. Falls or accidents, including car accidents, are another common cause of neck pain. Whiplash, a soft tissue injury to the neck, is also called neck sprain or strain. Treatment depends on the cause, but may include applying ice, taking pain relievers, getting physical therapy or wearing a cervical collar. You rarely need surgery.",
+    "entities": [
+      {
+        "entity": "neck",
+        "types": [
+          "body_part"
+        ]
+      },
+      {
+        "entity": "shoulder",
+        "types": [
+          "body_part"
+        ]
+      },
+      {
+        "entity": "jaw",
+        "types": [
+          "body_part"
+        ]
+      },
+      {
+        "entity": "head",
+        "types": [
+          "body_part"
+        ]
+      },
+      {
+        "entity": "upper arms",
+        "types": [
+          "body_part"
+        ]
+      },
+      {
+        "entity": "muscle strain",
+        "types": [
+          "medical_condition"
+        ]
+      },
+      {
+        "entity": "tension",
+        "types": [
+          "medical_condition"
+        ]
+      },
+      {
+        "entity": "overuse",
+        "types": [
+          "medical_condition"
+        ]
+      },
+      {
+        "entity": "computer",
+        "types": [
+          "technology"
+        ]
+      },
+      {
+        "entity": "sleeping position",
+        "types": [
+          "activity"
+        ]
+      },
+      {
+        "entity": "exercise",
+        "types": [
+          "activity"
+        ]
+      },
+      {
+        "entity": "falls",
+        "types": [
+          "event"
+        ]
+      },
+      {
+        "entity": "accidents",
+        "types": [
+          "event"
+        ]
+      },
+      {
+        "entity": "car accidents",
+        "types": [
+          "event"
+        ]
+      },
+      {
+        "entity": "whiplash",
+        "types": [
+          "medical_condition"
+        ]
+      },
+      {
+        "entity": "neck sprain",
+        "types": [
+          "medical_condition"
+        ]
+      },
+      {
+        "entity": "neck strain",
+        "types": [
+          "medical_condition"
+        ]
+      },
+      {
+        "entity": "physical therapy",
+        "types": [
+          "medical_treatment"
+        ]
+      },
+      {
+        "entity": "cervical collar",
+        "types": [
+          "medical_treatment"
+        ]
+      },
+      {
+        "entity": "surgery",
+        "types": [
+          "medical_treatment"
+        ]
+      }
+    ],
+    "negative_entities": [
+      {
+        "entity": "back muscles",
+        "types": [
+          "body_part"
+        ],
+        "similar_to": "neck"
+      },
+      {
+        "entity": "knee pain",
+        "types": [
+          "medical_condition"
+        ],
+        "similar_to": "neck pain"
+      },
+      {
+        "entity": "desktop computer",
+        "types": [
+          "technology"
+        ],
+        "similar_to": "computer"
+      },
+      {
+        "entity": "sleeping posture",
+        "types": [
+          "activity"
+        ],
+        "similar_to": "sleeping position"
+      },
+      {
+        "entity": "weightlifting",
+        "types": [
+          "activity"
+        ],
+        "similar_to": "exercise"
+      },
+      {
+        "entity": "bicycle accidents",
+        "types": [
+          "event"
+        ],
+        "similar_to": "car accidents"
+      },
+      {
+        "entity": "ankle sprain",
+        "types": [
+          "medical_condition"
+        ],
+        "similar_to": "whiplash"
+      },
+      {
+        "entity": "neck injury",
+        "types": [
+          "medical_condition"
+        ],
+        "similar_to": "neck sprain"
+      },
+      {
+        "entity": "orthopedic surgery",
+        "types": [
+          "medical_treatment"
+        ],
+        "similar_to": "surgery"
+      }
+    ]
+  }
+]
