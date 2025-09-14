@@ -1,5 +1,5 @@
 from gliner import GLiNER
-from info_nce_loss import InfoNCELoss
+from .info_nce_loss import InfoNCELoss
 
 class ContrastiveGLiNER(GLiNER):
     # Extends GLiNER to include contrastive learning with InfoNCE loss

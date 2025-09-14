@@ -1,0 +1,5 @@
+gliner
+google-genai
+datasets
+fastapi
+uvicorn
