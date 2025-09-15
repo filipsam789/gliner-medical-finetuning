@@ -44,7 +44,7 @@ class ContrastiveGLiNER(GLiNER):
             # Get anchor span embeddings (from standard forward pass used for original loss)
             anchor_span_embeddings = self._span_rep
             
-            # Reset span representation before each forward pass
+            # Reset span representation after each forward pass
             self._span_rep = None
 
             # Get words embedding and mask for positive samples
@@ -54,10 +54,10 @@ class ContrastiveGLiNER(GLiNER):
             )
 
             # Get positive span embeddings using implementation from GLiNER's forward method
-            positive_target_W = positive_span_idx.size(1) // self.config.max_width
+            positive_target_W = span_idx.size(1) // self.config.max_width
             positive_words_embedding, positive_mask = self.model._fit_length(positive_words_embedding, positive_mask, positive_target_W)
-            positive_span_idx = positive_span_idx * span_mask.unsqueeze(-1)
-            pos_span_embeddings = self.model.span_rep_layer(positive_words_embedding, positive_span_idx)
+            span_idx = span_idx * span_mask.unsqueeze(-1)
+            pos_span_embeddings = self.model.span_rep_layer(positive_words_embedding, span_idx)
 
             # Get words embedding and mask for negative samples
             _, _, negative_words_embedding, negative_mask = \
