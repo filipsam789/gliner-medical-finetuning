@@ -41,28 +41,23 @@ class ContrastiveGLiNER(GLiNER):
 
         # Extract span embeddings for contrastive learning
         try:
-
             # Get anchor span embeddings (from standard forward pass used for original loss)
             anchor_span_embeddings = self._span_rep
-
-            # Reset span representation to capture positive spans
+            
+            # Reset span representation before each forward pass
             self._span_rep = None
 
-            # Forward pass to get positive span embeddings
-            _ = super().forward(
-                input_ids=input_ids,
-                token_type_ids=token_type_ids,
-                attention_mask=attention_mask,
-                words_mask=words_mask,
-                labels=labels,
-                span_idx=span_idx,
-                span_mask=span_mask,
-                text_lengths=text_lengths,
-                return_span_embeddings=False,
-                *args, **kwargs
+            # Get words embedding and mask for positive samples
+            _, _, positive_words_embedding, positive_mask = \
+            self.model.get_representations(
+                input_ids, attention_mask, None, None, None, text_lengths, words_mask
             )
-            # Get positive span embeddings
-            pos_span_embeddings = self._span_rep
+
+            # Get positive span embeddings using implementation from GLiNER's forward method
+            positive_target_W = positive_span_idx.size(1) // self.config.max_width
+            positive_words_embedding, positive_mask = self.model._fit_length(positive_words_embedding, positive_mask, positive_target_W)
+            positive_span_idx = positive_span_idx * span_mask.unsqueeze(-1)
+            pos_span_embeddings = self.model.span_rep_layer(positive_words_embedding, positive_span_idx)
 
             # Get words embedding and mask for negative samples
             _, _, negative_words_embedding, negative_mask = \
@@ -70,7 +65,7 @@ class ContrastiveGLiNER(GLiNER):
                 negative_input_ids, negative_attention_mask, None, None, None, negative_text_lengths, negative_words_mask
             )
 
-            # Get negative span embeddings using implementation from GLiNER in the forward method
+            # Get negative span embeddings using implementation from GLiNER's forward method
             negative_target_W = negative_span_idx.size(1) // self.config.max_width
             negative_words_embedding, negative_mask = self.model._fit_length(negative_words_embedding, negative_mask, negative_target_W)
             negative_span_idx = negative_span_idx * negative_span_mask.unsqueeze(-1)
