@@ -10,6 +10,9 @@ class ContrastiveDataCollator(DataCollator):
         # Positive entities batching
         batch = super().__call__(features)  # negative_ner is ignored in the super call.
 
+        if "negative_ner" not in features[0]:
+          return batch
+          
         # Prepare features for negative batching
         negative_features = []
         for item in features:

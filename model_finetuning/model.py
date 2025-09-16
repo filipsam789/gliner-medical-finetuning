@@ -17,9 +17,9 @@ class ContrastiveGLiNER(GLiNER):
         self._span_rep = output
 
     def forward(self, input_ids, token_type_ids, attention_mask, words_mask, labels, span_idx, span_mask,
-                text_lengths, negative_input_ids, negative_token_type_ids, negative_attention_mask,
-                negative_words_mask, negative_labels, negative_span_idx, negative_span_mask,
-                negative_text_lengths, alpha=1e-2, # alpha is the weight for contrastive loss
+                text_lengths, negative_input_ids = None, negative_token_type_ids = None, negative_attention_mask = None,
+                negative_words_mask = None, negative_labels = None, negative_span_idx = None, negative_span_mask = None,
+                negative_text_lengths = None, alpha=1e-1, # alpha is the weight for contrastive loss
                 *args, **kwargs):
 
         # Reset span representation before each forward pass
@@ -38,6 +38,10 @@ class ContrastiveGLiNER(GLiNER):
             *args, **kwargs
         )
         original_loss = outputs.loss
+
+        # If batch doesn't contain negative entities
+        if negative_input_ids is None:
+          return outputs
 
         # Extract span embeddings for contrastive learning
         try:
