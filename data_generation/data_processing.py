@@ -2,6 +2,12 @@ import json
 import re
 import time
 from google.genai import types
+from google import genai
+import os
+
+from data_generation.artificial_dataset_generation import generate_from_prompts
+from data_generation.helper_functions import save_json
+from data_generation.prompt_generation import create_prompt
 
 def generate(prompts, client, data):
   responses = []
@@ -92,3 +98,22 @@ def extract_entities_with_negatives(data):
         })
 
     return all_examples
+
+def process_chunk(i, api_key, data, chunk_size):
+    os.environ['GEMINI_API_KEY'] = api_key
+    client = genai.Client()
+
+    # Create prompts for the suitable 500 passages
+    all_prompts = []
+    for j in range(i * chunk_size, (i + 1) * chunk_size):
+        prompt = create_prompt(data[j])
+        all_prompts.append(prompt)
+
+    outputs, json_outputs, processed_output = generate_from_prompts(all_prompts, client, data[(i * chunk_size) : ((i + 1) * chunk_size)])
+    
+    # Save all formats of the responses to files
+    save_json(outputs, f"./new_data_chunks/outputs{i}.json", pretty=True) # Raw
+    save_json(json_outputs, f"./new_data_chunks/json_outputs{i}.json", pretty=True) # Converted to json
+    save_json(processed_output, f"./new_data_chunks/processed_output{i}.json", pretty=False) # Processed into specific GLiNER format
+        
+    return outputs, json_outputs

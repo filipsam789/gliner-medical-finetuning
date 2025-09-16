@@ -2,8 +2,7 @@ from prompt_generation import *
 from data_processing import *
 from helper_functions import *
 from datasets import load_dataset
-from google import genai
-import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import math
 
@@ -38,32 +37,24 @@ processed_output_merged = []
 json_outputs_merged = []
 
 # Generate 500 samples per API key to prevent exceeding limits of free usage
-for i in range(num_chunks):
-    os.environ['GEMINI_API_KEY'] = api_keys[i]
-    client = genai.Client()
+results = []
 
-    # Create prompts for the suitable 500 passages
-    all_prompts = []
-    for j in range(i * chunk_size, (i + 1) * chunk_size):
-        prompt = create_prompt(data[j])
-        all_prompts.append(prompt)
+with ThreadPoolExecutor(max_workers=min(len(api_keys), num_chunks)) as executor:
+    futures = []
+    for i in range(num_chunks):
+        future = executor.submit(process_chunk, i, api_keys[i], data, chunk_size)
+        futures.append(future)
+    
+    # Collect results as they complete
+    for future in as_completed(futures):
+        outputs, json_outputs = future.result()
 
-    outputs, json_outputs, processed_output = generate_from_prompts(all_prompts, client, data[(i * num_chunks) : ((i + 1) * num_chunks)])
-    print(outputs)
-    print(json_outputs)
-    print(processed_output)
-
-    # Save all formats of the responses to files
-    save_json(outputs, f".\data_chunks\outputs{i}.json", pretty=True) # Raw
-    save_json(json_outputs, f".\data_chunks\json_outputs{i}.json", pretty=True) # Converted to json
-    save_json(processed_output, f".\data_chunks\processed_output{i}.json", pretty=False) # Processed into specific GLiNER format
-
-    # Merge data chunks into one array
-    processed_output_merged.extend(outputs)
-    processed_output_merged.extend(json_outputs)
-
+        # Merge data chunks into one array
+        processed_output_merged.extend(outputs)
+        json_outputs_merged.extend(json_outputs)
+        
 # Save merged output
-save_json(processed_output_merged, "../data/processed_output.json")
-save_json(json_outputs_merged, "../data/json_outputs.json")
+save_json(processed_output_merged, "../new_data/processed_output.json")
+save_json(json_outputs_merged, "../new_data/json_outputs.json")
 
 
