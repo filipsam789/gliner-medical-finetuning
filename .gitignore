@@ -1,2 +1,6 @@
 .DS_Store
 .idea
+frontend/node_modules
+.vscode
+__pycache__
+package-lock.json
