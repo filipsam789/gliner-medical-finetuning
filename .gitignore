@@ -4,3 +4,4 @@ frontend/node_modules
 .vscode
 __pycache__
 package-lock.json
+finetuned_gliner_model_NCELoss
