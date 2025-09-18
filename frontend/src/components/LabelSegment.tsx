@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Typography } from "@mui/material";
 import { getEntityBorderColor, getEntityLabelBgColor } from "../utils/utils";
 
@@ -19,6 +18,7 @@ export const LabelSegment = ({ label }: LabelSegmentProps) => {
         border: `2px solid ${getEntityBorderColor(label)}`,
         borderTop: "none",
         margin: 0,
+        px: 0.5,
         textAlign: "center",
       }}
     >
