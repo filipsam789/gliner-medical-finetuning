@@ -1,3 +1,4 @@
+from gliner import GLiNER
 from prompt_generation import *
 from data_processing import *
 from helper_functions import *
@@ -6,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import math
 
-def generate_from_prompts(prompts, client, data):
+def generate_from_prompts(prompts, client, data, tokenizer):
     outputs = generate(prompts, client, data)
 
     json_outputs = []
@@ -20,7 +21,7 @@ def generate_from_prompts(prompts, client, data):
 
         json_outputs.append(js)
 
-    return outputs, json_outputs, extract_entities_with_negatives(json_outputs)
+    return outputs, json_outputs, extract_entities_with_negatives(tokenizer, json_outputs)
 
 medical_data = load_dataset("Amirkid/MedQuad-dataset", download_mode="force_redownload")
 train_dataset = medical_data['train']
@@ -38,11 +39,14 @@ json_outputs_merged = []
 
 # Generate 500 samples per API key to prevent exceeding limits of free usage
 results = []
+gliner_model = GLiNER.from_pretrained("urchade/gliner_small")
+tokenizer = gliner_model.data_processor.transformer_tokenizer
 
 with ThreadPoolExecutor(max_workers=min(len(api_keys), num_chunks)) as executor:
     futures = []
+
     for i in range(num_chunks):
-        future = executor.submit(process_chunk, i, api_keys[i], data, chunk_size)
+        future = executor.submit(process_chunk, i, api_keys[i], data, chunk_size, tokenizer)
         futures.append(future)
     
     # Collect results as they complete

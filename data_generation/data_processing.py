@@ -5,9 +5,10 @@ from google.genai import types
 from google import genai
 import os
 
-from data_generation.artificial_dataset_generation import generate_from_prompts
-from data_generation.helper_functions import save_json
-from data_generation.prompt_generation import create_prompt
+from artificial_dataset_generation import generate_from_prompts
+from helper_functions import save_json
+from prompt_generation import create_prompt
+
 
 def generate(prompts, client, data):
   responses = []
@@ -40,8 +41,22 @@ def generate(prompts, client, data):
 
   return responses
 
-def tokenize_text(text):
-    return re.findall(r'\w+(?:[-_]\w+)*|\S', text)
+
+def tokenize_text(tokenizer, text):
+    encoding = tokenizer(
+        text,
+        add_special_tokens=False,
+        return_attention_mask=False,
+        return_offsets_mapping=False,
+        truncation=True,
+    )
+    try:
+        tokens = encoding.tokens()
+    except:
+        tokens = tokenizer.tokenize(text)
+    stripped_tokens = [tok.lstrip("▁") for tok in tokens]
+    return stripped_tokens
+
 
 def process_response(response, text_content):
     response = response.replace("```json", "").replace("```", "").strip()
@@ -63,12 +78,13 @@ def process_response(response, text_content):
         print("Error parsing JSON from response:", e)
         return None
 
-def extract_entities_with_negatives(data):
+
+def extract_entities_with_negatives(tokenizer, data):
     all_examples = []
 
     for i, dt in enumerate(data):
         try:
-            tokens = tokenize_text(dt['text'])
+            tokens = tokenize_text(tokenizer, dt['text'])
             positive_ents = [(k["entity"], k["types"]) for k in dt['entities']]
             negative_ents = [(k["entity"], k["types"]) for k in dt.get('negative_entities', [])]
         except:
@@ -77,7 +93,7 @@ def extract_entities_with_negatives(data):
 
         positive_spans = []
         for entity in positive_ents:
-            entity_tokens = tokenize_text(str(entity[0]))
+            entity_tokens = tokenize_text(tokenizer, str(entity[0]))
             for j in range(len(tokens) - len(entity_tokens) + 1):
                 if " ".join(tokens[j:j + len(entity_tokens)]).lower() == " ".join(entity_tokens).lower():
                     for el in entity[1]:
@@ -85,7 +101,7 @@ def extract_entities_with_negatives(data):
 
         negative_spans = []
         for entity in negative_ents:
-            entity_tokens = tokenize_text(str(entity[0]))
+            entity_tokens = tokenize_text(tokenizer, str(entity[0]))
             for j in range(len(tokens) - len(entity_tokens) + 1):
                 if " ".join(tokens[j:j + len(entity_tokens)]).lower() == " ".join(entity_tokens).lower():
                     for el in entity[1]:
@@ -99,7 +115,8 @@ def extract_entities_with_negatives(data):
 
     return all_examples
 
-def process_chunk(i, api_key, data, chunk_size):
+
+def process_chunk(i, api_key, data, chunk_size, tokenizer):
     os.environ['GEMINI_API_KEY'] = api_key
     client = genai.Client()
 
@@ -109,7 +126,7 @@ def process_chunk(i, api_key, data, chunk_size):
         prompt = create_prompt(data[j])
         all_prompts.append(prompt)
 
-    outputs, json_outputs, processed_output = generate_from_prompts(all_prompts, client, data[(i * chunk_size) : ((i + 1) * chunk_size)])
+    outputs, json_outputs, processed_output = generate_from_prompts(all_prompts, client, data[(i * chunk_size) : ((i + 1) * chunk_size)], tokenizer)
     
     # Save all formats of the responses to files
     save_json(outputs, f"./new_data_chunks/outputs{i}.json", pretty=True) # Raw
