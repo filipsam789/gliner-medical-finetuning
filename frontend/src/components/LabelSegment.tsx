@@ -25,7 +25,7 @@ export const LabelSegment = ({ label }: LabelSegmentProps) => {
       <Typography
         component="span"
         sx={{
-          fontSize: "10px",
+          fontSize: "11px",
           fontWeight: 700,
           color: "white",
           textTransform: "uppercase",

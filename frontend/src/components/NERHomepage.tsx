@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box, ThemeProvider, Snackbar, Alert } from "@mui/material";
 import { mainTheme } from "@/theme/mainTheme";
 import { analyzeEntities } from "@/api/apiCalls";
@@ -19,6 +19,7 @@ export const NERHomepage = () => {
   const [results, setResults] = useState<RepresentationResults>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +39,15 @@ export const NERHomepage = () => {
       setIsProcessing(false);
     }
   };
+
+  useEffect(() => {
+    if (results && !isProcessing && resultsRef.current) {
+      const handle = window.setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+      return () => window.clearTimeout(handle);
+    }
+  }, [results, isProcessing]);
 
   return (
     <ThemeProvider theme={mainTheme}>
@@ -67,7 +77,11 @@ export const NERHomepage = () => {
             isProcessing={isProcessing}
           />
 
-          {results && <NERResults results={results} />}
+          {results && (
+            <Box ref={resultsRef}>
+              <NERResults results={results} />
+            </Box>
+          )}
         </Box>
 
         <Snackbar
