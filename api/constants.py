@@ -1,7 +1,7 @@
 
 import re
 
-DEFAULT_MODEL_NAME = "urchade/gliner_small"
+DEFAULT_MODEL_NAME = "model_finetuning/urchade__gliner_small"
 DEFAULT_MODEL_NAME_FRONTEND = "regular-gliner"
 
 FINETUNED_MODEL_NAME = "finetuned_gliner_model_NCELoss"

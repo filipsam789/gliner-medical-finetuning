@@ -4,4 +4,7 @@ frontend/node_modules
 .vscode
 __pycache__
 package-lock.json
+.env
 finetuned_gliner_model_NCELoss
+microsoft__deberta-v3-small
+urchade__gliner_small

@@ -1,0 +1,41 @@
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: gliner-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./api:/app
+      - ./model_finetuning:/app/model_finetuning
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build: 
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: http://gliner-backend:8000
+    container_name: gliner-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  default:
+    name: gliner-network

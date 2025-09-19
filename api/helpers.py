@@ -33,5 +33,5 @@ def get_model(name: str) -> GLiNER:
             path = constants.DEFAULT_MODEL_NAME  # TODO replace
         else:
             raise HTTPException(status_code=400, detail=f"Model '{name}' not available")
-        MODEL_REGISTRY[name] = GLiNER.from_pretrained(path)
+        MODEL_REGISTRY[name] = GLiNER.from_pretrained(path, local_files_only=True)
     return MODEL_REGISTRY[name]
