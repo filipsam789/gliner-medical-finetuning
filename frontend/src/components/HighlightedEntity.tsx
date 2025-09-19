@@ -17,11 +17,12 @@ export const HighlightedEntity = ({ entity, entityIndex }: HighlightedEntityProp
       component="span"
       key={`entity-${entityIndex}`}
       sx={{
-        position: "relative",
-        display: "inline-block",
-        alignItems: "baseline",
+        display: "inline-flex",
+        flexDirection: "column",
+        alignItems: "stretch",
         mx: 0.5,
-        mb: 4,
+        mb: 1,
+        verticalAlign: "baseline",
       }}
     >
       <TextSegment text={entity.text} label={entity.label} />

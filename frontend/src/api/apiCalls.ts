@@ -20,10 +20,21 @@ export const analyzeEntities = async (
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
+        const detail = error.response.data?.detail;
+
+        let detailMessage: string;
+        if (Array.isArray(detail)) {
+          detailMessage = detail
+            .map((d: any) =>
+              typeof d === "string" ? d : d.msg ?? JSON.stringify(d)
+            )
+            .join("; ");
+        } else {
+          detailMessage = String(detail || "Unknown error");
+        }
+
         throw new Error(
-          `Server error: ${error.response.status} - ${
-            error.response.data?.message || "Unknown error"
-          }`
+          `Server error: ${error.response.status} - ${detailMessage}`
         );
       } else if (error.request) {
         throw new Error(
@@ -31,6 +42,7 @@ export const analyzeEntities = async (
         );
       }
     }
+
     throw new Error(
       "An unexpected error occurred while analyzing entities. Please try again."
     );
