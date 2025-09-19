@@ -8,3 +8,5 @@ package-lock.json
 finetuned_gliner_model_NCELoss
 microsoft__deberta-v3-small
 urchade__gliner_small
+data_chunks
+contrastive_pilener_data_chunks

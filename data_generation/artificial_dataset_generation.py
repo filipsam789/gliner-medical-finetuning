@@ -1,33 +1,22 @@
 from gliner import GLiNER
 from prompt_generation import *
-from data_processing import *
-from helper_functions import *
-from datasets import load_dataset
+from data_processing import process_chunk
+from helper_functions import save_json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import math
+import random
 
-def generate_from_prompts(prompts, client, data, tokenizer):
-    outputs = generate(prompts, client, data)
+# medical_data = load_dataset("Amirkid/MedQuad-dataset", download_mode="force_redownload")
+# train_dataset = medical_data['train']
 
-    json_outputs = []
+with open("data/raw_pilener_texts.json", "r", encoding="utf-8") as file:
+    train_dataset = json.load(file)
 
-    for output in outputs:
-        try:
-            js = json.loads(output.strip())
-        except:
-            print(f"Problematic json: {output}\n")
-            continue
-
-        json_outputs.append(js)
-
-    return outputs, json_outputs, extract_entities_with_negatives(tokenizer, json_outputs)
-
-medical_data = load_dataset("Amirkid/MedQuad-dataset", download_mode="force_redownload")
-train_dataset = medical_data['train']
+random.shuffle(train_dataset)
 
 # Eliminate questions from the dataset
-data = [train_dataset[i]['text'] for i in range(len(train_dataset)) if i % 2 == 1]
+data = [train_dataset[i]['text'] for i in range(len(train_dataset))]
 
 api_keys = ['APIKey1', 'APIKey2', 'APIKey3', 'APIKey4', 'APIKey5', 'APIKey6']
 chunk_size = 500
@@ -58,7 +47,7 @@ with ThreadPoolExecutor(max_workers=min(len(api_keys), num_chunks)) as executor:
         json_outputs_merged.extend(json_outputs)
         
 # Save merged output
-save_json(processed_output_merged, "../new_data/processed_output.json")
-save_json(json_outputs_merged, "../new_data/json_outputs.json")
+save_json(processed_output_merged, "new_data/processed_output.json")
+save_json(json_outputs_merged, "new_data/json_outputs.json")
 
 

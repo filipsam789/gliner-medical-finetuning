@@ -5,7 +5,6 @@ from google.genai import types
 from google import genai
 import os
 
-from artificial_dataset_generation import generate_from_prompts
 from helper_functions import save_json
 from prompt_generation import create_prompt
 
@@ -129,8 +128,24 @@ def process_chunk(i, api_key, data, chunk_size, tokenizer):
     outputs, json_outputs, processed_output = generate_from_prompts(all_prompts, client, data[(i * chunk_size) : ((i + 1) * chunk_size)], tokenizer)
     
     # Save all formats of the responses to files
-    save_json(outputs, f"./new_data_chunks/outputs{i}.json", pretty=True) # Raw
-    save_json(json_outputs, f"./new_data_chunks/json_outputs{i}.json", pretty=True) # Converted to json
-    save_json(processed_output, f"./new_data_chunks/processed_output{i}.json", pretty=False) # Processed into specific GLiNER format
+    save_json(outputs, f"outputs{i}.json", pretty=True) # Raw
+    save_json(json_outputs, f"json_outputs{i}.json", pretty=True) # Converted to json
+    save_json(processed_output, f"processed_output{i}.json", pretty=False) # Processed into specific GLiNER format
         
     return outputs, json_outputs
+
+def generate_from_prompts(prompts, client, data, tokenizer):
+    outputs = generate(prompts, client, data)
+
+    json_outputs = []
+
+    for output in outputs:
+        try:
+            js = json.loads(output.strip())
+        except:
+            print(f"Problematic json: {output}\n")
+            continue
+
+        json_outputs.append(js)
+
+    return outputs, json_outputs, extract_entities_with_negatives(tokenizer, json_outputs)
