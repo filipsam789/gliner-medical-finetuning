@@ -2,3 +2,5 @@ fastapi
 uvicorn
 pydantic
 gliner
+pymongo
+python-dotenv

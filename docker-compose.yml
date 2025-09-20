@@ -8,9 +8,14 @@ services:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
+      - MONGO_URL=mongodb://mongo:27017
+      - MONGO_DB_NAME=gliner_training
+      - MONGO_COLLECTION_NAME=ClientTexts
     volumes:
       - ./api:/app
       - ./model_finetuning:/app/model_finetuning
+    depends_on:
+      - mongo
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/"]
@@ -22,11 +27,11 @@ services:
     build: 
       context: .
       dockerfile: frontend/Dockerfile
-      args:
-        VITE_API_URL: http://gliner-backend:8000
     container_name: gliner-frontend
     ports:
       - "8080:80"
+    environment:
+      - VITE_API_URL=http://gliner-backend:8000
     depends_on:
       - backend
     restart: unless-stopped
@@ -35,6 +40,24 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+
+  mongo:
+    image: mongo:7
+    container_name: gliner-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  mongo_data:
 
 networks:
   default:
