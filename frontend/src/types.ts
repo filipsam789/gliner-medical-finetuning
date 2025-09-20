@@ -20,6 +20,7 @@ export interface RequestFormData {
   threshold: number;
   allowMultiLabeling: boolean;
   model: string;
+  allowTrainingUse: boolean;
 }
 
 export interface EntityResult {

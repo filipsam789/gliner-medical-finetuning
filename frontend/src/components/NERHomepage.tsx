@@ -14,6 +14,7 @@ export const NERHomepage = () => {
     threshold: 0.5,
     allowMultiLabeling: false,
     model: "contrastive-gliner",
+    allowTrainingUse: true,
   });
 
   const [results, setResults] = useState<RepresentationResults>(null);

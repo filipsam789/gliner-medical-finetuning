@@ -233,6 +233,37 @@ export const NERForm = ({
             />
           </Box>
 
+          <Box sx={{ mb: 1 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.allowTrainingUse}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      allowTrainingUse: e.target.checked,
+                    }))
+                  }
+                />
+              }
+              label={
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.2 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 500, fontSize: "0.875rem" }}
+                  >
+                    Allow use of text for training (optional)
+                  </Typography>
+                  <Tooltip title={tooltips.trainingConsent} placement="top">
+                    <IconButton size="small">
+                      <HelpCircle size={16} color="hsl(240, 3.8%, 46.1%)" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              }
+            />
+          </Box>
+
           <Button
             type="submit"
             variant="contained"

@@ -10,10 +10,12 @@ export const tooltips = {
     "Allow the same text span to be assigned multiple labels simultaneously.",
   model:
     "Choose between Contrastive GLiNER (more accurate, slower) and Regular GLiNER (faster, good accuracy).",
+  trainingConsent:
+    "Allow your submitted text to be used for improving future models. Your text will be stored anonymously and used only for training purposes.",
 };
 
-export const text_placeholder = "Skopje is located in the north of the country, in the center of the Balkan peninsula, and halfway between Belgrade and Athens. The city was built in the Skopje valley, oriented on a west-east axis, along the course of the Vardar river, which flows into the Aegean Sea in Greece. The valley is approximately 20 kilometers (12 miles) wide and it is limited by several mountain ranges to the North and South."
-export const entity_types_placeholder = "GPE, LOC, PERSON, ORGANIZATION, DATE, QUANTITY"
+export const text_placeholder = "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx. You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: Allergies Mononucleosis Smoking Strep throat Tonsillitis an infection in the tonsils Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Overthecounter pain relievers can also help, but children should not take aspirin."
+export const entity_types_placeholder = "BODY PART, DISEASE, TREATMENT, DRUG, AGE GROUP"
 
 export const thresholdSliderMarks = [
   { value: 0.1, label: '0.1' },

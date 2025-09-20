@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Paper } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { HeartRate } from "./HeartRate";
 
 export const Header = () => {

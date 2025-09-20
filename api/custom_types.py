@@ -8,6 +8,7 @@ class EntityRequest(BaseModel):
     threshold: float = Field(0.5, ge=0.0, le=1.0, description="Score threshold in range [0,1]")
     allow_multi_label: bool = Field(False, description="Allow multiple entity labels per entity")
     model: str = Field("default", description="Model selector")
+    allowTrainingUse: bool = Field(False, description="Allow text to be used for future model training")
 
     @validator("text")
     def validate_text(cls, v: str) -> str:

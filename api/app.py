@@ -1,8 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from helpers import get_model, parse_entity_types
+from helpers import get_model, parse_entity_types, store_training_text
 from custom_types import EntityRequest
 import constants
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -41,6 +44,9 @@ async def predict_entities(req: EntityRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Inference error: {e}")
+
+    if req.allowTrainingUse:
+        store_training_text(req.text)
 
     return entities
 

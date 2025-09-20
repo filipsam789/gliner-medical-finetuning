@@ -1,7 +1,13 @@
-from typing import List
+from typing import List, Optional
 from fastapi import HTTPException
 from gliner import GLiNER
 import constants
+from pymongo import MongoClient
+from pymongo.collection import Collection
+from pymongo.errors import ConnectionFailure
+from datetime import datetime
+import os
+import hashlib
 
 
 def parse_entity_types(raw: str) -> List[str]:
@@ -35,3 +41,55 @@ def get_model(name: str) -> GLiNER:
             raise HTTPException(status_code=400, detail=f"Model '{name}' not available")
         MODEL_REGISTRY[name] = GLiNER.from_pretrained(path, local_files_only=True)
     return MODEL_REGISTRY[name]
+
+client_texts_collection: Optional[Collection] = None
+def initialize_mongodb() -> Optional[Collection]:
+    global client_texts_collection
+
+    if client_texts_collection is not None:
+        return client_texts_collection
+
+    try:
+        mongo_url = os.getenv("MONGO_URL")
+        mongo_db_name = os.getenv("MONGO_DB_NAME")
+        mongo_collection_name = os.getenv("MONGO_COLLECTION_NAME")
+        
+        mongo_client = MongoClient(mongo_url)
+        db = mongo_client[mongo_db_name]
+        client_texts_collection = db[mongo_collection_name]
+                
+        return client_texts_collection
+    except Exception as e:
+        raise HTTPException(
+            status_code=503, 
+            detail="Database connection failed."
+        )
+
+
+def get_text_hash(text: str) -> str:
+    return hashlib.sha256(text.encode('utf-8')).hexdigest()
+
+
+def store_training_text(text: str) -> bool:
+    collection = initialize_mongodb()
+    
+    try:
+        text_hash = get_text_hash(text)
+        
+        existing = collection.find_one({"text_hash": text_hash})
+        if existing:
+            return False
+        
+        training_document = {
+            "text": text,
+            "text_hash": text_hash,
+        }
+        
+        result = collection.insert_one(training_document)
+        return True
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=503, 
+            detail="Failed to store text for training."
+        )

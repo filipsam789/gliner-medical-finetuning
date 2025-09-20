@@ -2,6 +2,11 @@ import axios from "axios";
 import { EntityResult, RepresentationResults, RequestFormData } from "@/types";
 import { API_URL } from "@/utils/constants";
 
+interface ErrorDetail {
+  msg?: string;
+  [key: string]: unknown;
+}
+
 export const analyzeEntities = async (
   formData: RequestFormData
 ): Promise<RepresentationResults> => {
@@ -25,7 +30,7 @@ export const analyzeEntities = async (
         let detailMessage: string;
         if (Array.isArray(detail)) {
           detailMessage = detail
-            .map((d: any) =>
+            .map((d: ErrorDetail | string) =>
               typeof d === "string" ? d : d.msg ?? JSON.stringify(d)
             )
             .join("; ");
