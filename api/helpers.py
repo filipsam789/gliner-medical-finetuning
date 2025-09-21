@@ -39,7 +39,7 @@ def get_model(name: str) -> GLiNER:
             path = constants.DEFAULT_MODEL_NAME  # TODO replace
         else:
             raise HTTPException(status_code=400, detail=f"Model '{name}' not available")
-        MODEL_REGISTRY[name] = GLiNER.from_pretrained(path, local_files_only=True)
+        MODEL_REGISTRY[name] = GLiNER.from_pretrained(path, local_files_only=(name == constants.FINETUNED_MODEL_NAME_FRONTEND))
     return MODEL_REGISTRY[name]
 
 client_texts_collection: Optional[Collection] = None

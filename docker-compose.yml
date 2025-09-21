@@ -7,10 +7,11 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - PYTHONUNBUFFERED=1
-      - MONGO_URL=mongodb://mongo:27017
-      - MONGO_DB_NAME=gliner_training
-      - MONGO_COLLECTION_NAME=ClientTexts
+      - PYTHONUNBUFFERED=${PYTHONUNBUFFERED}
+      - MONGO_URL=${MONGO_URL}
+      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - MONGO_COLLECTION_NAME=${MONGO_COLLECTION_NAME}
+      - CURL_CA_BUNDLE=${CURL_CA_BUNDLE}
     volumes:
       - ./api:/app
       - ./model_finetuning:/app/model_finetuning
@@ -31,7 +32,7 @@ services:
     ports:
       - "8080:80"
     environment:
-      - VITE_API_URL=http://gliner-backend:8000
+      - VITE_API_URL=${VITE_API_URL}
     depends_on:
       - backend
     restart: unless-stopped

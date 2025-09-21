@@ -4,3 +4,7 @@ pydantic
 gliner
 pymongo
 python-dotenv
+huggingface_hub
+certifi
+pip-system-certs
+requests==2.27.1
