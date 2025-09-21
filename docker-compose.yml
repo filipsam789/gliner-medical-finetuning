@@ -1,8 +1,7 @@
 services:
   backend:
-    build: 
-      context: .
-      dockerfile: api/Dockerfile
+    build:
+      context: ./api
     container_name: gliner-backend
     ports:
       - "8000:8000"
@@ -11,7 +10,6 @@ services:
       - MONGO_URL=${MONGO_URL}
       - MONGO_DB_NAME=${MONGO_DB_NAME}
       - MONGO_COLLECTION_NAME=${MONGO_COLLECTION_NAME}
-      - CURL_CA_BUNDLE=${CURL_CA_BUNDLE}
     volumes:
       - ./api:/app
       - ./model_finetuning:/app/model_finetuning
@@ -25,9 +23,8 @@ services:
       retries: 3
 
   frontend:
-    build: 
-      context: .
-      dockerfile: frontend/Dockerfile
+    build:
+      context: frontend
     container_name: gliner-frontend
     ports:
       - "8080:80"

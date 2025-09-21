@@ -9,14 +9,10 @@ RUN apt-get update && apt-get install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/local/share/ca-certificates/
-COPY cisco.crt /usr/local/share/ca-certificates/
-RUN update-ca-certificates
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r ./requirements.txt
-
+    
 COPY . .
+
+RUN pip install --no-cache-dir -r ./requirements.txt
 
 # RUN python download_models.py  # Uncomment after model upload
 
