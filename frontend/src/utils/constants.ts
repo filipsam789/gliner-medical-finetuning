@@ -1,4 +1,4 @@
-export const API_URL = process.env.VITE_API_URL;
+export const API_URL = "https://gliner-medical.switzerlandnorth.cloudapp.azure.com/api";
 
 export const tooltips = {
   text: "Enter the text you want to analyze for named entities.",
