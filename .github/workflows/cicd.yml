@@ -41,3 +41,46 @@ jobs:
            tags: ${{ env.IMAGE_FRONTEND }}:latest
            build-args: |
              VITE_API_URL=${{ secrets.VITE_API_URL }}
+             
+   deploy:
+     name: Deploy to Azure VM
+     runs-on: ubuntu-latest
+     needs: build-and-push
+     steps:
+       - name: Start SSH agent and load key
+         uses: webfactory/ssh-agent@v0.9.0
+         with:
+           ssh-private-key: ${{ secrets.VM_SSH_KEY }}
+   
+       - name: Add VM to known_hosts
+         run: |
+           mkdir -p ~/.ssh
+           ssh-keyscan -H ${{ secrets.VM_IP }} >> ~/.ssh/known_hosts
+   
+       - name: Deploy updated containers on Azure VM
+         env:
+           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+         run: |
+           ssh -o StrictHostKeyChecking=no "${{ secrets.VM_USER }}"@"${{ secrets.VM_IP }}" << 'EOF'
+             set -euo pipefail
+   
+             cd app
+   
+             docker compose down
+
+             docker ps -a --format '{{.ID}} {{.Names}}' \
+             | awk '/\b(gliner-backend|gliner-frontend)\b/ { print $1 }' \
+             | xargs -r docker rm -f
+        
+             docker image rm -f "${DOCKERHUB_USERNAME}/gliner-backend:latest" 2>/dev/null || true
+             docker image rm -f "${DOCKERHUB_USERNAME}/gliner-frontend:latest" 2>/dev/null || true
+   
+             docker image prune -f
+   
+             docker compose pull
+             docker compose up -d
+   
+             docker compose ps
+             docker compose logs --tail=50 backend || true
+             docker compose logs --tail=50 frontend || true
+           EOF
