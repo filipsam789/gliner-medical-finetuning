@@ -9,6 +9,7 @@ services:
       - MONGO_URL=${MONGO_URL}
       - MONGO_DB_NAME=${MONGO_DB_NAME}
       - MONGO_COLLECTION_NAME=${MONGO_COLLECTION_NAME}
+      - VITE_API_URL=${VITE_API_URL}
     depends_on:
       - mongo
     restart: unless-stopped

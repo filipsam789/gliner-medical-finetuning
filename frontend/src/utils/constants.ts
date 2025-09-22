@@ -1,4 +1,4 @@
-export const API_URL = "http://localhost:8000"
+export const API_URL = process.env.VITE_API_URL;
 
 export const tooltips = {
   text: "Enter the text you want to analyze for named entities.",
@@ -14,15 +14,17 @@ export const tooltips = {
     "Allow your submitted text to be used for improving future models. Your text will be stored anonymously and used only for training purposes.",
 };
 
-export const text_placeholder = "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx. You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: Allergies Mononucleosis Smoking Strep throat Tonsillitis an infection in the tonsils Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Overthecounter pain relievers can also help, but children should not take aspirin."
-export const entity_types_placeholder = "BODY PART, DISEASE, TREATMENT, DRUG, AGE GROUP"
+export const text_placeholder =
+  "Your throat is a tube that carries food to your esophagus and air to your windpipe and larynx (also called the voice box). The technical name for the throat is pharynx. You can have a sore throat for many reasons. Often, colds and flu cause sore throats. Other causes can include: Allergies Mononucleosis Smoking Strep throat Tonsillitis an infection in the tonsils Treatment depends on the cause. Sucking on lozenges, drinking lots of liquids, and gargling may ease the pain. Overthecounter pain relievers can also help, but children should not take aspirin.";
+export const entity_types_placeholder =
+  "BODY PART, DISEASE, TREATMENT, DRUG, AGE GROUP";
 
 export const thresholdSliderMarks = [
-  { value: 0.1, label: '0.1' },
-  { value: 0.3, label: '0.3' },
-  { value: 0.5, label: '0.5' },
-  { value: 0.7, label: '0.7' },
-  { value: 0.9, label: '0.9' },
+  { value: 0.1, label: "0.1" },
+  { value: 0.3, label: "0.3" },
+  { value: 0.5, label: "0.5" },
+  { value: 0.7, label: "0.7" },
+  { value: 0.9, label: "0.9" },
 ];
 
 export const entityColorPalette = [
