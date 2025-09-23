@@ -61,25 +61,26 @@ jobs:
          env:
            DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
          run: |
-           ssh -o StrictHostKeyChecking=no "${{ secrets.VM_USER }}"@"${{ secrets.VM_IP }}" << 'EOF'
+           ssh -o StrictHostKeyChecking=no "${{ secrets.VM_USER }}"@"${{ secrets.VM_IP }}" \
+           DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} 'bash -s' << 'EOF'
              set -euo pipefail
-   
+         
              cd app
-   
+         
              docker compose down
-
+         
              docker ps -a --format '{{.ID}} {{.Names}}' \
              | awk '/\b(gliner-backend|gliner-frontend)\b/ { print $1 }' \
              | xargs -r docker rm -f
-        
+         
              docker image rm -f "${DOCKERHUB_USERNAME}/gliner-backend:latest" 2>/dev/null || true
              docker image rm -f "${DOCKERHUB_USERNAME}/gliner-frontend:latest" 2>/dev/null || true
-   
+         
              docker image prune -f
-   
+         
              docker compose pull
              docker compose up -d
-   
+         
              docker compose ps
              docker compose logs --tail=50 backend || true
              docker compose logs --tail=50 frontend || true
