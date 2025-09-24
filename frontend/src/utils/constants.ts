@@ -1,5 +1,18 @@
 export const API_URL = "https://gliner-medical.switzerlandnorth.cloudapp.azure.com/api";
 
+export const DEV_ENVIRONMENT = "development";
+
+export const EMPTY_STRING = "";
+
+export const backendNotAvailableMessage =
+  "The backend service is unavailable. \n Please try again, or contact support if the issue persists.";
+
+export const LOCAL_STORAGE_KEYS = {
+  ID_TOKEN: "idToken",
+  USER_OPTIONS: "UserOptions",
+  USER_PROFILE: "UserProfile",
+};
+
 export const tooltips = {
   text: "Enter the text you want to analyze for named entities.",
   labels:
