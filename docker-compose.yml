@@ -63,8 +63,6 @@ services:
       - POSTGRES_DB=${POSTGRES_DEFAULT_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    networks:
-      - gliner-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DEFAULT_DB}"]
       interval: 300s
@@ -90,11 +88,8 @@ services:
     ports:
       - "8090:8080"
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     command: start-dev
-    networks:
-      - gliner-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 300s
@@ -110,8 +105,6 @@ services:
       - mongo_data:/data/db
       - ./mongo-init:/docker-entrypoint-initdb.d:ro
     restart: unless-stopped
-    networks:
-      - gliner-network
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 300s
@@ -125,5 +118,3 @@ volumes:
 networks:
   default:
     name: gliner-network
-  gliner-network:
-    driver: bridge

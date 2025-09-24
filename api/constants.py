@@ -13,4 +13,4 @@ MAX_TEXT_CHARS = 5_000
 MIN_TEXT_CHARS = 30
 MAX_ENTITY_TYPES = 12
 ALLOWED_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9_\-\s]{1,64}$")
-ALLOWED_FRONTEND_URLS = ["http://localhost:8080", "http://gliner-medical.switzerlandnorth.cloudapp.azure.com"]
+ALLOWED_FRONTEND_URLS = ["http://localhost:80", "http://localhost:8080", "http://gliner-medical.switzerlandnorth.cloudapp.azure.com"]
