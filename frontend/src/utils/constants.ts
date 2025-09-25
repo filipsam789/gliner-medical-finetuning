@@ -1,4 +1,4 @@
-export const API_URL = "https://gliner-medical.switzerlandnorth.cloudapp.azure.com/api";
+export const API_URL = import.meta.env.VITE_API_URL;
 
 export const DEV_ENVIRONMENT = "development";
 

@@ -7,4 +7,5 @@ python-dotenv
 huggingface_hub
 certifi
 pip-system-certs
-jwt
+PyJWT
+dotenv

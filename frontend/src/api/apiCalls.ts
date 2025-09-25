@@ -76,13 +76,54 @@ export const getUser = async (token: string): Promise<User> => {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         const detail = error.response.data?.detail;
-        const detailMessage = typeof detail === "string" ? detail : "Unknown error";
-        
+        const detailMessage =
+          typeof detail === "string" ? detail : "Unknown error";
+
         if (error.response.status === 401) {
           throw new Error("Unauthorized: " + detailMessage);
         }
-        
-        throw new Error(`Server error: ${error.response.status} - ${detailMessage}`);
+
+        throw new Error(
+          `Server error: ${error.response.status} - ${detailMessage}`
+        );
+      } else if (error.request) {
+        throw new Error(
+          "Network error: Unable to connect to the server. Please check your connection."
+        );
+      }
+    }
+
+    throw new Error(
+      "An unexpected error occurred while fetching user details. Please try again."
+    );
+  }
+};
+
+export const subscribeUser = async (token: string): Promise<void> => {
+  try {
+    await axios.post(
+      `${API_URL}/subscribe`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        const detail = error.response.data?.detail;
+        const detailMessage =
+          typeof detail === "string" ? detail : "Unknown error";
+
+        if (error.response.status === 401) {
+          throw new Error("Unauthorized: " + detailMessage);
+        }
+
+        throw new Error(
+          `Server error: ${error.response.status} - ${detailMessage}`
+        );
       } else if (error.request) {
         throw new Error(
           "Network error: Unable to connect to the server. Please check your connection."

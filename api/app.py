@@ -1,3 +1,4 @@
+import requests
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from helpers import get_model, parse_entity_types, store_training_text
@@ -5,11 +6,28 @@ from custom_types import EntityRequest
 import constants
 from dotenv import load_dotenv
 import jwt
+from jwt.exceptions import InvalidTokenError
 import os
+from fastapi_keycloak import FastAPIKeycloak, OIDCUser
+
+app = FastAPI()
 
 load_dotenv()
 
-app = FastAPI()
+KEYCLOAK_SERVER_URL = os.getenv("KEYCLOAK_SERVER_URL")
+KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
+KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
+KEYCLOAK_ADMIN_USER = os.getenv("KEYCLOAK_ADMIN_USER")
+KEYCLOAK_ADMIN_PASSWORD = os.getenv("KEYCLOAK_ADMIN_PASSWORD")
+
+idp = FastAPIKeycloak(
+    server_url=KEYCLOAK_SERVER_URL,
+    client_id=KEYCLOAK_CLIENT_ID,
+    client_secret=None,
+    admin_client_secret=None,
+    realm=KEYCLOAK_REALM,
+    callback_uri="http://localhost:8080/callback"
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,7 +38,6 @@ app.add_middleware(
 )
 
 def get_user_from_token(request: Request):
-    """Extract user details from Keycloak JWT token"""
     authorization = request.headers.get("Authorization")
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Authorization header missing or invalid")
@@ -28,14 +45,12 @@ def get_user_from_token(request: Request):
     token = authorization.split(" ")[1]
     
     try:
-        # Decode JWT token without verification for now (in production, verify with Keycloak public key)
         decoded_token = jwt.decode(token, options={"verify_signature": False})
         
         email = decoded_token.get("email")
         if not email:
             raise HTTPException(status_code=401, detail="Email address not found in token")
         
-        # Extract other user details from token
         user_details = {
             "email": email,
             "username": decoded_token.get("preferred_username"),
@@ -47,7 +62,7 @@ def get_user_from_token(request: Request):
         
         return user_details
         
-    except jwt.InvalidTokenError:
+    except InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Token processing error: {str(e)}")
@@ -96,6 +111,26 @@ async def predict_entities(req: EntityRequest):
 
     return entities
 
+@app.post("/subscribe")
+async def subscribe(user: OIDCUser = Depends(idp.get_current_user)):
+    try:
+        # user.sub contains the user ID
+        user_id = user.sub
+        # Assign the "premium_user" role
+        idp.assign_client_role_to_user(
+            user_id=user_id,
+            client_id="test-client",
+            role_name="premium_user"
+        )
+        return {"message": "premium_user role assigned successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to assign role: {str(e)}")
+    
+@app.get("/callback", tags=["auth-flow"])
+def callback(session_state: str, code: str):
+    return idp.exchange_authorization_code(session_state=session_state, code=code)
+
 @app.get("/")
 async def health():
     return {"status": "online"}
+

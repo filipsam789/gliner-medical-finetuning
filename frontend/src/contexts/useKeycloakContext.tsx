@@ -54,7 +54,7 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
     isDev && console.log("Initializing Keycloak");
     keycloak
       .init({
-        onLoad: undefined,
+        onLoad: "login-required",
         scope: "openid profile email",
         checkLoginIframe: false,
       })
@@ -93,7 +93,7 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
                   setToken(keycloak.token ?? null);
                 }
               })
-              .catch(() => console.error("Failed to refresh token"));
+              .catch(error => console.error("Failed to refresh token", error));
           }, 20000);
         }
       })
