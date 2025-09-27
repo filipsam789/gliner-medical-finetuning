@@ -1,33 +1,11 @@
-import requests
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from helpers import get_model, parse_entity_types, store_training_text
 from custom_types import EntityRequest
 import constants
-from dotenv import load_dotenv
-import jwt
-from jwt.exceptions import InvalidTokenError
-import os
-from fastapi_keycloak import FastAPIKeycloak, OIDCUser
+from utils import get_keycloak_admin_token, assign_role_to_user, get_user_from_token
 
 app = FastAPI()
-
-load_dotenv()
-
-KEYCLOAK_SERVER_URL = os.getenv("KEYCLOAK_SERVER_URL")
-KEYCLOAK_REALM = os.getenv("KEYCLOAK_REALM")
-KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
-KEYCLOAK_ADMIN_USER = os.getenv("KEYCLOAK_ADMIN_USER")
-KEYCLOAK_ADMIN_PASSWORD = os.getenv("KEYCLOAK_ADMIN_PASSWORD")
-
-idp = FastAPIKeycloak(
-    server_url=KEYCLOAK_SERVER_URL,
-    client_id=KEYCLOAK_CLIENT_ID,
-    client_secret=None,
-    admin_client_secret=None,
-    realm=KEYCLOAK_REALM,
-    callback_uri="http://localhost:8080/callback"
-)
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,36 +14,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-def get_user_from_token(request: Request):
-    authorization = request.headers.get("Authorization")
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Authorization header missing or invalid")
-    
-    token = authorization.split(" ")[1]
-    
-    try:
-        decoded_token = jwt.decode(token, options={"verify_signature": False})
-        
-        email = decoded_token.get("email")
-        if not email:
-            raise HTTPException(status_code=401, detail="Email address not found in token")
-        
-        user_details = {
-            "email": email,
-            "username": decoded_token.get("preferred_username"),
-            "firstName": decoded_token.get("given_name"),
-            "lastName": decoded_token.get("family_name"),
-            "id": decoded_token.get("sub"),
-            "roles": decoded_token.get("realm_access", {}).get("roles", [])
-        }
-        
-        return user_details
-        
-    except InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Token processing error: {str(e)}")
 
 @app.get("/get_user")
 async def get_user(request: Request):
@@ -112,24 +60,76 @@ async def predict_entities(req: EntityRequest):
     return entities
 
 @app.post("/subscribe")
-async def subscribe(user: OIDCUser = Depends(idp.get_current_user)):
+async def subscribe(request: Request):
+    """Assign premium_user role to the authenticated user"""
     try:
-        # user.sub contains the user ID
-        user_id = user.sub
-        # Assign the "premium_user" role
-        idp.assign_client_role_to_user(
-            user_id=user_id,
-            client_id="test-client",
-            role_name="premium_user"
-        )
-        return {"message": "premium_user role assigned successfully"}
+        user_details = get_user_from_token(request)
+        user_id = user_details["id"]
+        
+        result = assign_role_to_user(user_id, "premium_user")
+        
+        return {
+            "message": "premium_user role assigned successfully",
+            "user": user_details["email"],
+            "role": "premium_user"
+        }
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to assign role: {str(e)}")
-    
-@app.get("/callback", tags=["auth-flow"])
-def callback(session_state: str, code: str):
-    return idp.exchange_authorization_code(session_state=session_state, code=code)
+        raise HTTPException(status_code=500, detail=f"Failed to subscribe user: {str(e)}")
 
+@app.get("/premium-content")
+async def premium_content(request: Request):
+    """Premium content that only premium_user role can access"""
+    try:
+        user_details = get_user_from_token(request)
+        user_roles = user_details.get("roles", [])
+        
+        if "premium_user" not in user_roles:
+            raise HTTPException(status_code=403, detail="Access denied: Premium subscription required")
+        
+        return {
+            "message": "Welcome to Premium Content!",
+            "content": "This is exclusive premium content only for premium users.",
+            "user": user_details["email"],
+            "features": [
+                "Advanced AI Models",
+                "Unlimited API Calls",
+                "Priority Support",
+                "Custom Training Data"
+            ]
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get premium content: {str(e)}")
+
+@app.get("/regular-content")
+async def regular_content(request: Request):
+    """Regular content that only regular_user role can access"""
+    try:
+        user_details = get_user_from_token(request)
+        user_roles = user_details.get("roles", [])
+        
+        if "regular_user" not in user_roles:
+            raise HTTPException(status_code=403, detail="Access denied: Regular user access required")
+        
+        return {
+            "message": "Welcome to Regular User Content!",
+            "content": "This is content for regular users.",
+            "user": user_details["email"],
+            "features": [
+                "Basic AI Models",
+                "Limited API Calls (100/day)",
+                "Community Support",
+                "Standard Features"
+            ]
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get regular content: {str(e)}")
+    
 @app.get("/")
 async def health():
     return {"status": "online"}

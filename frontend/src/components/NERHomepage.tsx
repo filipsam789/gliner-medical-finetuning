@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, ThemeProvider, Snackbar, Alert, Button } from "@mui/material";
+import { Box, ThemeProvider, Snackbar, Alert } from "@mui/material";
 import { mainTheme } from "@/theme/mainTheme";
-import { analyzeEntities, subscribeUser } from "@/api/apiCalls";
+import { analyzeEntities } from "@/api/apiCalls";
 import { Header } from "./Header";
 import { NERForm } from "./NERForm";
 import { NERResults } from "./NERResults";
 import { RepresentationResults, RequestFormData } from "@/types";
-import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
-import { useAuth } from "@/contexts/useAuth";
 
 export const NERHomepage = () => {
   const [formData, setFormData] = useState<RequestFormData>({
@@ -23,18 +21,6 @@ export const NERHomepage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
-
-  const { token } = useKeycloakAuth();
-  const { setRoles, handleLogoutRedirect } = useAuth();
-
-  const pay = () => {
-    subscribeUser(token);
-  };
-
-  const logout = () => {
-    handleLogoutRedirect();
-    setRoles(undefined);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,12 +72,6 @@ export const NERHomepage = () => {
             gap: 4,
           }}
         >
-          <Button onClick={logout} variant="contained">
-            Log out
-          </Button>
-          <Button onClick={pay} variant="contained">
-            Pay
-          </Button>
           <Header />
 
           <NERForm

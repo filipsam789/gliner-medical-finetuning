@@ -7,7 +7,7 @@ import React, {
   ReactNode,
   useContext,
 } from "react";
-import { DEV_ENVIRONMENT, LOCAL_STORAGE_KEYS } from "@/utils/constants";
+import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import keycloak from "@/lib/keycloak";
 import { getFromLocalStorage, setToLocalStorage } from "@/shared/shared";
 interface UserProfile {
@@ -34,7 +34,6 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [authInProgress, setAuthInProgress] = useState(true);
   const initialized = useRef(false);
-  const isDev = import.meta.env.DEV;
 
   useEffect(() => {
     const cachedProfile = getFromLocalStorage(
@@ -51,7 +50,6 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
-    isDev && console.log("Initializing Keycloak");
     keycloak
       .init({
         onLoad: "login-required",
@@ -59,7 +57,6 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
         checkLoginIframe: false,
       })
       .then((success: boolean) => {
-        isDev && console.log("Authenticated:", success);
         if (success) {
           setIsAuthenticated(true);
           setToken(keycloak.token ?? null);
@@ -69,7 +66,6 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
           );
           if (!userProfile) {
             if (keycloak.tokenParsed?.email) {
-              isDev && console.log("Token Parsed", keycloak.tokenParsed);
               const profile = {
                 name:
                   (keycloak.tokenParsed.given_name || "") +
@@ -84,7 +80,6 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
               console.warn("Cannot find user profile");
             }
           }
-          isDev && console.log("Refresh the token");
           setInterval(() => {
             keycloak
               .updateToken(30)

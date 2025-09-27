@@ -32,6 +32,8 @@ services:
     # image: ${DOCKERHUB_USERNAME}/gliner-frontend:latest
     build:
       context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL}
     container_name: gliner-frontend
     ports:
       - "8080:80"

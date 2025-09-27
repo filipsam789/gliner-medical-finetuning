@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import RoleTestPage from "./pages/RoleTestPage";
+import NavBar from "./components/NavBar";
 import { ThemeProvider } from "@emotion/react";
 import { customTheme } from "./theme/theme";
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, Box } from "@mui/material";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -11,18 +13,15 @@ const App = () => (
   <ThemeProvider theme={customTheme}>
     <CssBaseline />
     <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-                <Index />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <NavBar />
+      <Box sx={{ paddingTop: '100px' }}>
+        <Routes>
+          <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+          <Route path="/role-test" element={<ProtectedRoute><RoleTestPage /></ProtectedRoute>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Box>
     </BrowserRouter>
   </ThemeProvider>
 );

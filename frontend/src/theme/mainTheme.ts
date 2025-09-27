@@ -47,6 +47,12 @@ export const mainTheme = createTheme({
       fontSize: "1rem",
       color: "hsl(240, 3.8%, 46.1%)",
     },
+    subtitle1: {
+      fontSize: "1rem",
+      fontWeight: 700,
+      color: "#555",
+      fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+    },
   },
   components: {
     MuiCard: {
@@ -169,6 +175,35 @@ export const mainTheme = createTheme({
             fontSize: '0.875rem',
             color: 'hsl(240, 3.8%, 46.1%)',
           },
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#fafafa',
+          color: '#333',
+          borderBottom: '1px solid #e0e0e0',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          height: '100px',
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          minHeight: '100px !important',
+          height: '100px',
+          justifyContent: 'space-between',
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#e0e0e0', // Light grey instead of dark grey
+          width: 32,
+          height: 32,
         },
       },
     },

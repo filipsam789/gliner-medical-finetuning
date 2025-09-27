@@ -16,50 +16,59 @@ export interface User {
   roles: string[];
 }
 
-export const analyzeEntities = async (
-  formData: RequestFormData
-): Promise<RepresentationResults> => {
-  try {
-    const entities = await axios.post<EntityResult[]>(
-      `${API_URL}/predict_entities`,
-      formData
-    );
+interface ContentResponse {
+  message: string;
+  content: string;
+  user: string;
+  features: string[];
+}
 
-    const results: RepresentationResults = {
+class ApiError extends Error {}
+class ServerError extends ApiError {}
+class NetworkError extends ApiError {}
+class UnauthorizedError extends ApiError {}
+class AccessDeniedError extends ApiError {}
+
+const parseDetailMessage = (detail: unknown): string => {
+  if (Array.isArray(detail)) {
+    return detail
+      .map((d) => (typeof d === "string" ? d : (d as ErrorDetail)?.msg ?? JSON.stringify(d)))
+      .join("; ");
+  }
+  return String(detail || "Unknown error");
+};
+
+const handleAxiosError = (error: unknown, contextMsg: string) => {
+  if (axios.isAxiosError(error)) {
+    if (error.response) {
+      const detail = error.response.data?.detail;
+      const detailMessage = parseDetailMessage(detail);
+      const status = error.response.status;
+
+      if (status === 401) {
+        throw new UnauthorizedError(`${contextMsg}: Unauthorized - ${detailMessage}`);
+      }
+      if (status === 403) {
+        throw new AccessDeniedError(`${contextMsg}: Access denied - ${detailMessage}`);
+      }
+      throw new ServerError(`${contextMsg}: Server error ${status} - ${detailMessage}`);
+    } else if (error.request) {
+      throw new NetworkError(`${contextMsg}: Network error - Unable to connect to server.`);
+    }
+  }
+  throw new ApiError(`${contextMsg}: An unexpected error occurred. Please try again.`);
+};
+
+export const analyzeEntities = async (formData: RequestFormData): Promise<RepresentationResults> => {
+  try {
+    const entities = await axios.post<EntityResult[]>(`${API_URL}/predict_entities`, formData);
+
+    return {
       text: formData.text,
       entities: entities.data,
     };
-
-    return results;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        const detail = error.response.data?.detail;
-
-        let detailMessage: string;
-        if (Array.isArray(detail)) {
-          detailMessage = detail
-            .map((d: ErrorDetail | string) =>
-              typeof d === "string" ? d : d.msg ?? JSON.stringify(d)
-            )
-            .join("; ");
-        } else {
-          detailMessage = String(detail || "Unknown error");
-        }
-
-        throw new Error(
-          `Server error: ${error.response.status} - ${detailMessage}`
-        );
-      } else if (error.request) {
-        throw new Error(
-          "Network error: Unable to connect to the server. Please check your connection."
-        );
-      }
-    }
-
-    throw new Error(
-      "An unexpected error occurred while analyzing entities. Please try again."
-    );
+    handleAxiosError(error, "Error analyzing entities");
   }
 };
 
@@ -73,29 +82,7 @@ export const getUser = async (token: string): Promise<User> => {
 
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        const detail = error.response.data?.detail;
-        const detailMessage =
-          typeof detail === "string" ? detail : "Unknown error";
-
-        if (error.response.status === 401) {
-          throw new Error("Unauthorized: " + detailMessage);
-        }
-
-        throw new Error(
-          `Server error: ${error.response.status} - ${detailMessage}`
-        );
-      } else if (error.request) {
-        throw new Error(
-          "Network error: Unable to connect to the server. Please check your connection."
-        );
-      }
-    }
-
-    throw new Error(
-      "An unexpected error occurred while fetching user details. Please try again."
-    );
+    handleAxiosError(error, "Error fetching user details");
   }
 };
 
@@ -111,28 +98,32 @@ export const subscribeUser = async (token: string): Promise<void> => {
       }
     );
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        const detail = error.response.data?.detail;
-        const detailMessage =
-          typeof detail === "string" ? detail : "Unknown error";
+    handleAxiosError(error, "Error subscribing user");
+  }
+};
 
-        if (error.response.status === 401) {
-          throw new Error("Unauthorized: " + detailMessage);
-        }
+export const getPremiumContent = async (token: string): Promise<ContentResponse> => {
+  try {
+    const response = await axios.get<ContentResponse>(`${API_URL}/premium-content`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching premium content");
+  }
+};
 
-        throw new Error(
-          `Server error: ${error.response.status} - ${detailMessage}`
-        );
-      } else if (error.request) {
-        throw new Error(
-          "Network error: Unable to connect to the server. Please check your connection."
-        );
-      }
-    }
-
-    throw new Error(
-      "An unexpected error occurred while fetching user details. Please try again."
-    );
+export const getRegularContent = async (token: string): Promise<ContentResponse> => {
+  try {
+    const response = await axios.get<ContentResponse>(`${API_URL}/regular-content`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching regular content");
   }
 };
