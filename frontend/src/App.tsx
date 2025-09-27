@@ -8,6 +8,9 @@ import { customTheme } from "./theme/theme";
 import { CssBaseline, Box } from "@mui/material";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ExperimentsPage from "./pages/ExperimentsPage";
+import ExperimentDetailsPage from "./pages/ExperimentDetailsPage";
+import DocumentDetailsPage from "./pages/DocumentDetailsPage";
 
 const App = () => (
   <ThemeProvider theme={customTheme}>
@@ -18,6 +21,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
           <Route path="/role-test" element={<ProtectedRoute><RoleTestPage /></ProtectedRoute>} />
+          <Route path="/experiments" element={<ProtectedRoute><ExperimentsPage /></ProtectedRoute>} />
+          <Route path="/experiments/:id" element={<ProtectedRoute><ExperimentDetailsPage /></ProtectedRoute>} />
+          <Route path="/documents/:id" element={<ProtectedRoute><DocumentDetailsPage /></ProtectedRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

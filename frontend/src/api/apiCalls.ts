@@ -23,6 +23,21 @@ interface ContentResponse {
   features: string[];
 }
 
+export interface Experiment {
+  id: number;
+  name: string;
+  image_url: string;
+}
+
+export interface ExperimentRun {
+  id: number;
+  date_ran: string;
+  model: string;
+  threshold?: number | null;
+  labels_to_extract: string;
+  allow_multilabeling: boolean;
+}
+
 class ApiError extends Error {}
 class ServerError extends ApiError {}
 class NetworkError extends ApiError {}
@@ -125,5 +140,120 @@ export const getRegularContent = async (token: string): Promise<ContentResponse>
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error fetching regular content");
+  }
+};
+
+export const getExperimentDetails = async (token: string, experimentId: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/experiments/${experimentId}/documents`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching experiment details");
+    throw error;
+  }
+};
+
+export const addDocument = async (token: string, experimentId: string, title: string, text: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/experiments/${experimentId}/documents`, { title, text }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error adding document");
+    throw error;
+  }
+};
+
+export const getExperimentRuns = async (token: string, experimentId: string): Promise<ExperimentRun[]> => {
+  try {
+    const response = await axios.get(`${API_URL}/experiments/${experimentId}/runs`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching experiment run history");
+    return [];
+  }
+};
+
+export const getDocumentDetails = async (token: string, documentId: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/documents/${documentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching document details");
+    throw error;
+  }
+};
+export const deleteDocument = async (token: string, documentId: number) => {
+  try {
+    const response = await axios.delete(`${API_URL}/documents/${documentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error deleting document");
+    throw error;
+  }
+};
+
+export const getExperiments = async (token: string): Promise<Experiment[]> => {
+  try {
+    const response = await axios.get<Experiment[]>(`${API_URL}/experiments`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching experiments");
+    return [];
+  }
+};
+
+export const createExperiment = async (token: string, name: string): Promise<Experiment> => {
+  try {
+    const response = await axios.post<Experiment>(
+      `${API_URL}/experiments`,
+      { name },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error creating experiment");
+    throw error;
+  }
+};
+
+export const deleteExperiment = async (token: string, experimentId: number): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await axios.delete(`${API_URL}/experiments/${experimentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error deleting experiment");
+    throw error;
   }
 };

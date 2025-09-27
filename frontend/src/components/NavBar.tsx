@@ -43,6 +43,10 @@ const NavBar: React.FC = () => {
     navigate('/role-test');
   };
 
+  const goToExperiments = () => {
+    navigate('/experiments');
+  };
+
   if (!isAuthenticated) {
     return null;
   }
@@ -82,6 +86,16 @@ const NavBar: React.FC = () => {
             >
               Test Roles
             </Button>
+            {userProfile && Array.isArray(userProfile.roles) && userProfile.roles.includes('premium_user') && (
+              <Button
+                onClick={goToExperiments}
+                variant="contained"
+                color="primary"
+                size="small"
+              >
+                Create experiments
+              </Button>
+            )}
           </Stack>
 
           <Stack direction="row" alignItems="center" spacing={2}>

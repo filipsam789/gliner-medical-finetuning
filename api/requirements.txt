@@ -9,3 +9,5 @@ certifi
 pip-system-certs
 PyJWT
 dotenv
+sqlalchemy
+psycopg2-binary

@@ -13,6 +13,7 @@ import { getFromLocalStorage, setToLocalStorage } from "@/shared/shared";
 interface UserProfile {
   name?: string;
   email?: string;
+  roles?: string[];
 }
 interface KeycloakContextType {
   isAuthenticated: boolean;
@@ -66,13 +67,15 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
           );
           if (!userProfile) {
             if (keycloak.tokenParsed?.email) {
-              const profile = {
+              const profile: UserProfile = {
                 name:
                   (keycloak.tokenParsed.given_name || "") +
                   (keycloak.tokenParsed.family_name
                     ? ` ${keycloak.tokenParsed.family_name}`
                     : ""),
                 email: keycloak.tokenParsed.email || "",
+                roles:
+                  keycloak.tokenParsed?.realm_access?.roles || [],
               };
               setUserProfile(profile);
               setToLocalStorage(LOCAL_STORAGE_KEYS.USER_PROFILE, profile);

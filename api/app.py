@@ -4,8 +4,14 @@ from helpers import get_model, parse_entity_types, store_training_text
 from custom_types import EntityRequest
 import constants
 from utils import get_keycloak_admin_token, assign_role_to_user, get_user_from_token
+from experiments import router as experiments_router
+from documents import router as documents_router
+from experiment_runs import router as experiment_runs_router
 
 app = FastAPI()
+app.include_router(experiments_router)
+app.include_router(documents_router)
+app.include_router(experiment_runs_router)
 
 app.add_middleware(
     CORSMiddleware,

@@ -13,6 +13,13 @@ export const LOCAL_STORAGE_KEYS = {
   USER_PROFILE: "UserProfile",
 };
 
+export const MODEL_OPTIONS = {
+  CONTRASTIVE_GLINER: "Contrastive GLiNER",
+  REGULAR_GLINER: "Regular GLiNER",
+  GPT_4: "GPT-4",
+  CLAUDE_SONNET_4: "Claude Sonnet 4.0",
+}
+
 export const tooltips = {
   text: "Enter the text you want to analyze for named entities.",
   labels:

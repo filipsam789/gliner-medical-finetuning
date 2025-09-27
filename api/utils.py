@@ -13,6 +13,11 @@ KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
 KEYCLOAK_ADMIN_USER = os.getenv("KEYCLOAK_ADMIN_USER")
 KEYCLOAK_ADMIN_PASSWORD = os.getenv("KEYCLOAK_ADMIN_PASSWORD")
 
+async def premium_user_required(request: Request):
+    user = get_user_from_token(request)
+    if "premium_user" not in user.get("roles", []):
+        raise HTTPException(status_code=403, detail="Premium user access required")
+    return user
 
 def get_keycloak_admin_token():
     """Get admin access token from Keycloak"""
