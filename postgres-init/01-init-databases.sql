@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS experiments.experiment_runs (
     model VARCHAR(255) NOT NULL,
     labels_to_extract TEXT NOT NULL,
     allow_multilabeling BOOLEAN NOT NULL,
-    threshold FLOAT NOT NULL,
+    threshold FLOAT,
     experiment_id INTEGER REFERENCES experiments.experiments(id) ON DELETE CASCADE,
-    date_ran TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_ran TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 );

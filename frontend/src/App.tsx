@@ -10,6 +10,8 @@ import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ExperimentsPage from "./pages/ExperimentsPage";
 import ExperimentDetailsPage from "./pages/ExperimentDetailsPage";
+
+import SubscriptionsPage from "./pages/SubscriptionsPage";
 import DocumentDetailsPage from "./pages/DocumentDetailsPage";
 
 const App = () => (
@@ -25,6 +27,7 @@ const App = () => (
           <Route path="/experiments/:id" element={<ProtectedRoute><ExperimentDetailsPage /></ProtectedRoute>} />
           <Route path="/documents/:id" element={<ProtectedRoute><DocumentDetailsPage /></ProtectedRoute>} />
           <Route path="/login" element={<Login />} />
+          <Route path="/subscriptions" element={<ProtectedRoute><SubscriptionsPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>

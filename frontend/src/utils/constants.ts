@@ -14,10 +14,10 @@ export const LOCAL_STORAGE_KEYS = {
 };
 
 export const MODEL_OPTIONS = {
-  CONTRASTIVE_GLINER: "Contrastive GLiNER",
-  REGULAR_GLINER: "Regular GLiNER",
-  GPT_4: "GPT-4",
-  CLAUDE_SONNET_4: "Claude Sonnet 4.0",
+  "contrastive-gliner": "Contrastive GLiNER",
+  "regular-gliner": "Regular GLiNER",
+  "gpt-4": "GPT-4",
+  "claude-sonnet-4": "Claude Sonnet 4.0",
 }
 
 export const tooltips = {

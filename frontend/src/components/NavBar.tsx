@@ -79,6 +79,14 @@ const NavBar: React.FC = () => {
               Upgrade to Premium
             </Button>
             <Button
+              onClick={() => navigate('/subscriptions')}
+              variant="contained"
+              color="secondary"
+              size="small"
+            >
+              Upgrade to Premium 2
+            </Button>
+            <Button
               onClick={goToRoleTest}
               variant="contained"
               color="primary"

@@ -93,3 +93,20 @@ def store_training_text(text: str) -> bool:
             status_code=503, 
             detail="Failed to store text for training."
         )
+
+def predict_entities_batch(model_name: str, entity_types_raw: str, texts: list, threshold: float, allow_multi_label: bool):
+    entity_types = parse_entity_types(entity_types_raw)
+    model = get_model(model_name)
+    results = []
+    for text in texts:
+        try:
+            entities = model.predict_entities(
+                text,
+                entity_types,
+                threshold=threshold,
+                allow_multi_label=allow_multi_label,
+            )
+            results.append(entities)
+        except Exception as e:
+            results.append([]) 
+    return results

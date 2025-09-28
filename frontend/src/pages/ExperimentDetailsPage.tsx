@@ -133,7 +133,15 @@ const ExperimentDetailsPage: React.FC = () => {
         loading={loading}
       />
 
-      <RunExperimentDialog open={runOpen} onClose={() => setRunOpen(false)} />
+      <RunExperimentDialog
+        open={runOpen}
+        onClose={() => setRunOpen(false)}
+        experimentId={id}
+        onRunSuccess={async () => {
+          const runsData = await getExperimentRuns(token, id);
+          setRuns(runsData);
+        }}
+      />
     </Box>
   );
 };

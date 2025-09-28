@@ -185,6 +185,25 @@ export const getExperimentRuns = async (token: string, experimentId: string): Pr
   }
 };
 
+export const addExperimentRun = async (token: string, experimentId: string, runData: {
+  model: string;
+  labels_to_extract: string;
+  allow_multilabeling: boolean;
+  threshold: number;
+}) => {
+  try {
+    const response = await axios.post(`${API_URL}/experiments/${experimentId}/runs`, runData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error running experiment");
+    throw error;
+  }
+};
+
 export const getDocumentDetails = async (token: string, documentId: string) => {
   try {
     const response = await axios.get(`${API_URL}/documents/${documentId}`, {
