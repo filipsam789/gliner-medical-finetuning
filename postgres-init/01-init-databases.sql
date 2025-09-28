@@ -31,5 +31,5 @@ CREATE TABLE IF NOT EXISTS experiments.experiment_runs (
     allow_multilabeling BOOLEAN NOT NULL,
     threshold FLOAT,
     experiment_id INTEGER REFERENCES experiments.experiments(id) ON DELETE CASCADE,
-    date_ran TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_ran TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
