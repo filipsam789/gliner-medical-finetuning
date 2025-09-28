@@ -201,7 +201,7 @@ export const mainTheme = createTheme({
     MuiAvatar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#e0e0e0', // Light grey instead of dark grey
+          backgroundColor: '#e0e0e0',
           width: 32,
           height: 32,
         },

@@ -206,11 +206,11 @@ export const NERForm = ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={formData.allowMultiLabeling}
+                  checked={formData.allow_multi_labeling}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      allowMultiLabeling: e.target.checked,
+                      allow_multi_labeling: e.target.checked,
                     }))
                   }
                 />

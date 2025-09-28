@@ -65,9 +65,9 @@ const RunsTable: React.FC<RunsTableProps> = ({ runs }) => {
                   }}
                 >
                   {run.allow_multilabeling ? (
-                    <span style={{ color: "green" }}>✔</span>
+                    <span >Yes</span>
                   ) : (
-                    <span style={{ color: "red" }}>✘</span>
+                    <span>No</span>
                   )}
                 </td>
               </tr>

@@ -47,7 +47,9 @@ class AccessDeniedError extends ApiError {}
 const parseDetailMessage = (detail: unknown): string => {
   if (Array.isArray(detail)) {
     return detail
-      .map((d) => (typeof d === "string" ? d : (d as ErrorDetail)?.msg ?? JSON.stringify(d)))
+      .map((d) =>
+        typeof d === "string" ? d : (d as ErrorDetail)?.msg ?? JSON.stringify(d)
+      )
       .join("; ");
   }
   return String(detail || "Unknown error");
@@ -61,22 +63,37 @@ const handleAxiosError = (error: unknown, contextMsg: string) => {
       const status = error.response.status;
 
       if (status === 401) {
-        throw new UnauthorizedError(`${contextMsg}: Unauthorized - ${detailMessage}`);
+        throw new UnauthorizedError(
+          `${contextMsg}: Unauthorized - ${detailMessage}`
+        );
       }
       if (status === 403) {
-        throw new AccessDeniedError(`${contextMsg}: Access denied - ${detailMessage}`);
+        throw new AccessDeniedError(
+          `${contextMsg}: Access denied - ${detailMessage}`
+        );
       }
-      throw new ServerError(`${contextMsg}: Server error ${status} - ${detailMessage}`);
+      throw new ServerError(
+        `${contextMsg}: Server error ${status} - ${detailMessage}`
+      );
     } else if (error.request) {
-      throw new NetworkError(`${contextMsg}: Network error - Unable to connect to server.`);
+      throw new NetworkError(
+        `${contextMsg}: Network error - Unable to connect to server.`
+      );
     }
   }
-  throw new ApiError(`${contextMsg}: An unexpected error occurred. Please try again.`);
+  throw new ApiError(
+    `${contextMsg}: An unexpected error occurred. Please try again.`
+  );
 };
 
-export const analyzeEntities = async (formData: RequestFormData): Promise<RepresentationResults> => {
+export const analyzeEntities = async (
+  formData: RequestFormData
+): Promise<RepresentationResults> => {
   try {
-    const entities = await axios.post<EntityResult[]>(`${API_URL}/predict_entities`, formData);
+    const entities = await axios.post<EntityResult[]>(
+      `${API_URL}/predict_entities`,
+      formData
+    );
 
     return {
       text: formData.text,
@@ -117,39 +134,55 @@ export const subscribeUser = async (token: string): Promise<void> => {
   }
 };
 
-export const getPremiumContent = async (token: string): Promise<ContentResponse> => {
+export const getPremiumContent = async (
+  token: string
+): Promise<ContentResponse> => {
   try {
-    const response = await axios.get<ContentResponse>(`${API_URL}/premium-content`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get<ContentResponse>(
+      `${API_URL}/premium-content`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error fetching premium content");
   }
 };
 
-export const getRegularContent = async (token: string): Promise<ContentResponse> => {
+export const getRegularContent = async (
+  token: string
+): Promise<ContentResponse> => {
   try {
-    const response = await axios.get<ContentResponse>(`${API_URL}/regular-content`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get<ContentResponse>(
+      `${API_URL}/regular-content`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error fetching regular content");
   }
 };
 
-export const getExperimentDetails = async (token: string, experimentId: string) => {
+export const getExperimentDetails = async (
+  token: string,
+  experimentId: string
+) => {
   try {
-    const response = await axios.get(`${API_URL}/experiments/${experimentId}/documents`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      `${API_URL}/experiments/${experimentId}/documents`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error fetching experiment details");
@@ -157,13 +190,22 @@ export const getExperimentDetails = async (token: string, experimentId: string) 
   }
 };
 
-export const addDocument = async (token: string, experimentId: string, title: string, text: string) => {
+export const addDocument = async (
+  token: string,
+  experimentId: string,
+  title: string,
+  text: string
+) => {
   try {
-    const response = await axios.post(`${API_URL}/experiments/${experimentId}/documents`, { title, text }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.post(
+      `${API_URL}/experiments/${experimentId}/documents`,
+      { title, text },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error adding document");
@@ -171,13 +213,19 @@ export const addDocument = async (token: string, experimentId: string, title: st
   }
 };
 
-export const getExperimentRuns = async (token: string, experimentId: string): Promise<ExperimentRun[]> => {
+export const getExperimentRuns = async (
+  token: string,
+  experimentId: string
+): Promise<ExperimentRun[]> => {
   try {
-    const response = await axios.get(`${API_URL}/experiments/${experimentId}/runs`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      `${API_URL}/experiments/${experimentId}/runs`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error fetching experiment run history");
@@ -185,18 +233,26 @@ export const getExperimentRuns = async (token: string, experimentId: string): Pr
   }
 };
 
-export const addExperimentRun = async (token: string, experimentId: string, runData: {
-  model: string;
-  labels_to_extract: string;
-  allow_multilabeling: boolean;
-  threshold: number;
-}) => {
+export const addExperimentRun = async (
+  token: string,
+  experimentId: string,
+  runData: {
+    model: string;
+    labels_to_extract: string;
+    allow_multilabeling: boolean;
+    threshold: number;
+  }
+) => {
   try {
-    const response = await axios.post(`${API_URL}/experiments/${experimentId}/runs`, runData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.post(
+      `${API_URL}/experiments/${experimentId}/runs`,
+      runData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error running experiment");
@@ -245,7 +301,10 @@ export const getExperiments = async (token: string): Promise<Experiment[]> => {
   }
 };
 
-export const createExperiment = async (token: string, name: string): Promise<Experiment> => {
+export const createExperiment = async (
+  token: string,
+  name: string
+): Promise<Experiment> => {
   try {
     const response = await axios.post<Experiment>(
       `${API_URL}/experiments`,
@@ -263,16 +322,39 @@ export const createExperiment = async (token: string, name: string): Promise<Exp
   }
 };
 
-export const deleteExperiment = async (token: string, experimentId: number): Promise<{ success: boolean; message: string }> => {
+export const deleteExperiment = async (
+  token: string,
+  experimentId: number
+): Promise<{ success: boolean; message: string }> => {
   try {
-    const response = await axios.delete(`${API_URL}/experiments/${experimentId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.delete(
+      `${API_URL}/experiments/${experimentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error deleting experiment");
+    throw error;
+  }
+};
+
+export const getExperimentRunResults = async (token: string, runId: string) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/experiment-runs/${runId}/results`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching experiment run results");
     throw error;
   }
 };

@@ -54,7 +54,7 @@ async def predict_entities(req: EntityRequest):
             req.text,
             entity_types,
             threshold=req.threshold,
-            allow_multi_label=req.allow_multi_label,
+            multi_label=req.allow_multi_labeling,
         )
 
     except Exception as e:

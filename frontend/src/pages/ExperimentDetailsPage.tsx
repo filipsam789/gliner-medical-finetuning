@@ -1,4 +1,3 @@
-// ExperimentDetailsPage.tsx
 import React, { useEffect, useState } from "react";
 import { Box, Alert } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";

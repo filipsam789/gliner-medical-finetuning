@@ -52,6 +52,10 @@ const DocumentsSection: React.FC<DocumentsSectionProps> = ({
               mb: 2,
               position: "relative",
               cursor: "pointer",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: 370,
             }}
             onClick={() => navigate(`/documents/${doc.id}`)}
           >
@@ -62,30 +66,40 @@ const DocumentsSection: React.FC<DocumentsSectionProps> = ({
               alt={doc.title}
               sx={{ objectFit: "cover" }}
             />
-            <CardContent>
+
+            <Box
+              sx={{
+                flexGrow: 1,
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
               <Typography variant="subtitle2" color="textSecondary">
                 {doc.date_added}
               </Typography>
               <Typography variant="h6" noWrap>
                 {doc.title}
               </Typography>
-              <Typography variant="body2" sx={{ mb: 1 }}>
+              <Typography variant="body2" sx={{ mb: 1, flexGrow: 1 }}>
                 {truncateText(doc.text, 120)}
               </Typography>
+            </Box>
+            <Box sx={{ p: 2, pt: 0 }}>
               <Button size="small" variant="outlined">
                 Read more
               </Button>
-            </CardContent>
-            <IconButton
-              sx={{ position: "absolute", right: 8, bottom: 8 }}
-              color="error"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteClick(doc.id);
-              }}
-            >
-              <Trash2 size={20} />
-            </IconButton>
+              <IconButton
+                sx={{ position: "absolute", right: 8, bottom: 8 }}
+                color="error"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteClick(doc.id);
+                }}
+              >
+                <Trash2 size={20} />
+              </IconButton>
+            </Box>
           </Card>
         ))}
       </Stack>

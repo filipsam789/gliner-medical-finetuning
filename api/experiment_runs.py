@@ -84,3 +84,18 @@ async def add_experiment_run(experiment_id: int, data: dict, request: Request, u
         "allow_multilabeling": run.allow_multilabeling,
         "results": results
     }
+
+@router.get("/experiment-runs/{run_id}/results")
+async def get_experiment_run_results(run_id: int, request: Request, user=Depends(premium_user_required)):
+    from helpers import initialize_mongodb
+    mongo_client = initialize_mongodb()
+    
+    result = mongo_client.database.ExperimentResults.find_one({"experiment_run_id": run_id})
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="Experiment run results not found")
+    
+    return {
+        "experiment_run_id": run_id,
+        "results": result["results"]
+    }

@@ -5,6 +5,8 @@ import { analyzeEntities } from "@/api/apiCalls";
 import { Header } from "./Header";
 import { NERForm } from "./NERForm";
 import { NERResults } from "./NERResults";
+import { EntitySummary } from "./EntitySummary";
+import { EntityList } from "./EntityList";
 import { RepresentationResults, RequestFormData } from "@/types";
 
 export const NERHomepage = () => {
@@ -12,7 +14,7 @@ export const NERHomepage = () => {
     text: "",
     entity_types: "",
     threshold: 0.5,
-    allowMultiLabeling: false,
+    allow_multi_labeling: false,
     model: "contrastive-gliner",
     allowTrainingUse: true,
   });
@@ -82,8 +84,13 @@ export const NERHomepage = () => {
           />
 
           {results && (
-            <Box ref={resultsRef}>
+            <Box
+              ref={resultsRef}
+              sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+            >
               <NERResults results={results} />
+              <EntitySummary entities={results.entities} />
+              <EntityList entities={results.entities} />
             </Box>
           )}
         </Box>

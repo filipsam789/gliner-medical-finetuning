@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -8,13 +8,13 @@ import {
   Button,
   ThemeProvider,
   Alert,
-} from '@mui/material';
-import { UserCircle } from 'lucide-react';
+} from "@mui/material";
+import { UserCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useKeycloakAuth } from '@/contexts/useKeycloakContext';
-import { useAuth } from '@/contexts/useAuth';
-import { subscribeUser } from '@/api/apiCalls';
-import { mainTheme } from '@/theme/mainTheme';
+import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
+import { useAuth } from "@/contexts/useAuth";
+import { subscribeUser } from "@/api/apiCalls";
+import { mainTheme } from "@/theme/mainTheme";
 import { Link } from "react-router-dom";
 
 const NavBar: React.FC = () => {
@@ -30,7 +30,7 @@ const NavBar: React.FC = () => {
         window.location.reload();
       }, 1000);
     } catch (error) {
-      setError('Failed to upgrade to premium. Please try again.');
+      setError("Failed to upgrade to premium. Please try again.");
     }
   };
 
@@ -40,11 +40,11 @@ const NavBar: React.FC = () => {
   };
 
   const goToRoleTest = () => {
-    navigate('/role-test');
+    navigate("/role-test");
   };
 
   const goToExperiments = () => {
-    navigate('/experiments');
+    navigate("/experiments");
   };
 
   if (!isAuthenticated) {
@@ -55,20 +55,11 @@ const NavBar: React.FC = () => {
     <ThemeProvider theme={mainTheme}>
       <AppBar position="fixed" elevation={2}>
         <Toolbar>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link to="/">
-              <img 
-                src="/logo.png" 
-                alt="GLiNER Medical Logo" 
-                style={{ 
-                  height: '250px', 
-                  width: 'auto',
-                  objectFit: 'contain'
-                }} 
-            />
-          </Link>
-        </Box>
-
+              <Typography variant="h6">GLiNER Medical</Typography>
+            </Link>
+          </Box>
           <Stack direction="row" spacing={2}>
             <Button
               onClick={pay}
@@ -79,7 +70,7 @@ const NavBar: React.FC = () => {
               Upgrade to Premium
             </Button>
             <Button
-              onClick={() => navigate('/subscriptions')}
+              onClick={() => navigate("/subscriptions")}
               variant="contained"
               color="secondary"
               size="small"
@@ -94,23 +85,25 @@ const NavBar: React.FC = () => {
             >
               Test Roles
             </Button>
-            {userProfile && Array.isArray(userProfile.roles) && userProfile.roles.includes('premium_user') && (
-              <Button
-                onClick={goToExperiments}
-                variant="contained"
-                color="primary"
-                size="small"
-              >
-                Create experiments
-              </Button>
-            )}
+            {userProfile &&
+              Array.isArray(userProfile.roles) &&
+              userProfile.roles.includes("premium_user") && (
+                <Button
+                  onClick={goToExperiments}
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                >
+                  Create experiments
+                </Button>
+              )}
           </Stack>
 
           <Stack direction="row" alignItems="center" spacing={2}>
             <Stack direction="row" alignItems="center" spacing={1}>
               <UserCircle size={32} color="#9e9e9e" />
               <Typography variant="subtitle1">
-                {userProfile?.name || 'User'}
+                {userProfile?.name || "User"}
               </Typography>
             </Stack>
             <Button
@@ -124,8 +117,12 @@ const NavBar: React.FC = () => {
           </Stack>
         </Toolbar>
         {error && (
-          <Box sx={{ position: 'fixed', top: 80, left: 0, right: 0, zIndex: 1300 }}>
-            <Alert severity="error" onClose={() => setError("")}>{error}</Alert>
+          <Box
+            sx={{ position: "fixed", top: 80, left: 0, right: 0, zIndex: 1300 }}
+          >
+            <Alert severity="error" onClose={() => setError("")}>
+              {error}
+            </Alert>
           </Box>
         )}
       </AppBar>

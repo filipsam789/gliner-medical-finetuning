@@ -11,14 +11,14 @@ export interface Results {
 }
 
 export interface EntityHighlighterProps {
-  results: Results;
+  results: RepresentationResults;
 }
 
 export interface RequestFormData {
   text: string;
   entity_types: string;
   threshold: number;
-  allowMultiLabeling: boolean;
+  allow_multi_labeling: boolean;
   model: string;
   allowTrainingUse: boolean;
 }
