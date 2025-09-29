@@ -87,12 +87,18 @@ const handleAxiosError = (error: unknown, contextMsg: string) => {
 };
 
 export const analyzeEntities = async (
-  formData: RequestFormData
+  formData: RequestFormData,
+  token: string
 ): Promise<RepresentationResults> => {
   try {
     const entities = await axios.post<EntityResult[]>(
       `${API_URL}/predict_entities`,
-      formData
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
 
     return {
@@ -318,6 +324,20 @@ export const createExperiment = async (
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error creating experiment");
+    throw error;
+  }
+};
+
+export const getUsageStatus = async (token: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/usage-status`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching usage status");
     throw error;
   }
 };

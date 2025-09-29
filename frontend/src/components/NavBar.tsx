@@ -10,7 +10,7 @@ import {
   Alert,
 } from "@mui/material";
 import { UserCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
 import { useAuth } from "@/contexts/useAuth";
 import { subscribeUser } from "@/api/apiCalls";
@@ -21,33 +21,26 @@ const NavBar: React.FC = () => {
   const { userProfile, isAuthenticated, token } = useKeycloakAuth();
   const { setRoles, handleLogoutRedirect } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [error, setError] = useState<string>("");
 
-  const pay = async () => {
-    try {
-      await subscribeUser(token);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    } catch (error) {
-      setError("Failed to upgrade to premium. Please try again.");
-    }
-  };
+  const publicRoutes = ["/subscriptions", "/login"];
+  const isPublicRoute = publicRoutes.includes(location.pathname);
 
   const logout = () => {
     handleLogoutRedirect();
     setRoles(undefined);
   };
 
-  const goToRoleTest = () => {
-    navigate("/role-test");
+  const goToExtractEntities = () => {
+    navigate("/extract-entities");
   };
 
   const goToExperiments = () => {
     navigate("/experiments");
   };
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isPublicRoute) {
     return null;
   }
 
@@ -61,60 +54,67 @@ const NavBar: React.FC = () => {
             </Link>
           </Box>
           <Stack direction="row" spacing={2}>
-            <Button
-              onClick={pay}
-              variant="contained"
-              color="primary"
-              size="small"
-            >
-              Upgrade to Premium
-            </Button>
-            <Button
-              onClick={() => navigate("/subscriptions")}
-              variant="contained"
-              color="secondary"
-              size="small"
-            >
-              Upgrade to Premium 2
-            </Button>
-            <Button
-              onClick={goToRoleTest}
-              variant="contained"
-              color="primary"
-              size="small"
-            >
-              Test Roles
-            </Button>
-            {userProfile &&
-              Array.isArray(userProfile.roles) &&
-              userProfile.roles.includes("premium_user") && (
+            {isAuthenticated ? (
+              <>
                 <Button
-                  onClick={goToExperiments}
+                  onClick={goToExtractEntities}
                   variant="contained"
                   color="primary"
                   size="small"
                 >
-                  Create experiments
+                  Extract entities
                 </Button>
-              )}
+                <Button
+                  onClick={() => navigate("/subscriptions")}
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                >
+                  Subscription plans
+                </Button>
+                {userProfile &&
+                  Array.isArray(userProfile.roles) &&
+                  userProfile.roles.includes("premium_user") && (
+                    <Button
+                      onClick={goToExperiments}
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                    >
+                      Create experiments
+                    </Button>
+                  )}
+              </>
+            ) : (
+              <Button
+                onClick={() => navigate("/login")}
+                variant="contained"
+                color="primary"
+                size="small"
+              >
+                Login
+              </Button>
+            )}
           </Stack>
 
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <UserCircle size={32} color="#9e9e9e" />
-              <Typography variant="subtitle1">
-                {userProfile?.name || "User"}
-              </Typography>
+          {isAuthenticated && (
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <UserCircle size={32} color="#9e9e9e" />
+                <Typography variant="subtitle1">
+                  {userProfile?.name || "User"}
+                </Typography>
+              </Stack>
+              <Button
+                onClick={logout}
+                variant="contained"
+                color="primary"
+                size="small"
+              >
+                Logout
+              </Button>
             </Stack>
-            <Button
-              onClick={logout}
-              variant="contained"
-              color="primary"
-              size="small"
-            >
-              Logout
-            </Button>
-          </Stack>
+          )}
         </Toolbar>
         {error && (
           <Box

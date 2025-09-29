@@ -35,3 +35,10 @@ export interface RepresentationResults {
   text: string;
   entities: EntityResult[];
 }
+
+export interface UsageStatus {
+  is_premium: boolean;
+  daily_limit?: number;
+  used_today?: number;
+  remaining?: number;
+}

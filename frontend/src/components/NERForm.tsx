@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Card,
@@ -14,15 +14,18 @@ import {
   Tooltip,
   IconButton,
   Slider,
+  Chip,
 } from "@mui/material";
 import { HelpCircle, Brain } from "lucide-react";
-import { RequestFormData } from "@/types";
+import { RequestFormData, UsageStatus } from "@/types";
 import {
   entity_types_placeholder,
   text_placeholder,
   tooltips,
   thresholdSliderMarks,
 } from "@/utils/constants";
+import { getUsageStatus } from "@/api/apiCalls";
+import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
 
 interface NERFormProps {
   formData: RequestFormData;
@@ -37,6 +40,42 @@ export const NERForm = ({
   onSubmit,
   isProcessing,
 }: NERFormProps) => {
+  const { token } = useKeycloakAuth();
+  const [usageStatus, setUsageStatus] = useState<UsageStatus | null>(null);
+
+  useEffect(() => {
+    const fetchUsageStatus = async () => {
+      if (token) {
+        try {
+          const status = await getUsageStatus(token);
+          setUsageStatus(status);
+        } catch (error) {
+          console.error("Error fetching usage status:", error);
+        }
+      }
+    };
+    fetchUsageStatus();
+  }, [token]);
+
+  const isDisabled = usageStatus
+    ? usageStatus.remaining === 0 && !usageStatus.is_premium
+    : false;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    await onSubmit(e);
+
+    if (token && !usageStatus?.is_premium) {
+      try {
+        const status = await getUsageStatus(token);
+        setUsageStatus(status);
+      } catch (error) {
+        console.error("Error refreshing usage status:", error);
+      }
+    }
+  };
+
   return (
     <Card>
       <CardContent sx={{ p: 3 }}>
@@ -60,7 +99,7 @@ export const NERForm = ({
 
         <Box
           component="form"
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           sx={{ display: "flex", flexDirection: "column", gap: 3 }}
         >
           <Box>
@@ -91,6 +130,7 @@ export const NERForm = ({
               }
               required
               variant="outlined"
+              disabled={isDisabled}
             />
           </Box>
 
@@ -269,11 +309,40 @@ export const NERForm = ({
             variant="contained"
             size="large"
             fullWidth
-            disabled={isProcessing}
+            disabled={isProcessing || isDisabled}
             sx={{ mt: 2 }}
           >
-            {isProcessing ? "Processing..." : "Analyze Entities"}
+            {isProcessing
+              ? "Processing..."
+              : isDisabled
+              ? "Daily Limit Reached"
+              : "Analyze Entities"}
           </Button>
+          {usageStatus && (
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+              {usageStatus.is_premium ? null : (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Chip
+                    label={`${usageStatus.used_today || 0}/${
+                      usageStatus.daily_limit || 5
+                    } extractions used today`}
+                    color={usageStatus.remaining === 0 ? "error" : "primary"}
+                    variant="outlined"
+                  />
+                  {usageStatus.remaining === 0 && (
+                    <Typography
+                      variant="body2"
+                      color="error"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      Daily limit reached! Upgrade to Premium for unlimited
+                      access.
+                    </Typography>
+                  )}
+                </Box>
+              )}
+            </Box>
+          )}
         </Box>
       </CardContent>
     </Card>

@@ -8,6 +8,7 @@ import {
   SetStateAction,
   useEffect,
 } from "react";
+import { useLocation } from "react-router-dom";
 
 import { AccountType } from "@/utils/types";
 import { getUser } from "@/api/apiCalls";
@@ -41,6 +42,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loginError, setLogInError] = useState<string>();
   const { isAuthenticated, authInProgress, login, logout, userProfile, token } =
     useKeycloakAuth();
+  const location = useLocation();
+
+  const publicRoutes = ["/subscriptions"];
+  const isPublicRoute = publicRoutes.includes(location.pathname);
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -80,10 +85,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated && !authInProgress) {
+    if (!isAuthenticated && !authInProgress && !isPublicRoute) {
       handleLoginRedirect();
     }
-  }, [isAuthenticated, authInProgress]);
+  }, [isAuthenticated, authInProgress, isPublicRoute]);
 
   const providerValues = useMemo(
     () => ({
@@ -95,20 +100,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setLogInError,
       handleLogoutRedirect,
     }),
-    [account, setAccount, roles, setRoles],
+    [account, setAccount, roles, setRoles]
   );
 
   return (
     <AuthContext.Provider value={providerValues}>
-      {(loginError !== undefined && roles !== undefined && children) || (
-        <Box 
-          sx={{ 
-            margin: "auto", 
-            height: "100vh", 
-            marginTop: 8, 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "center" 
+      {(((loginError !== undefined && roles !== undefined) || isPublicRoute) &&
+        children) || (
+        <Box
+          sx={{
+            margin: "auto",
+            height: "100vh",
+            marginTop: 8,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <CircularProgress />

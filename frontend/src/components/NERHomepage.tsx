@@ -8,8 +8,10 @@ import { NERResults } from "./NERResults";
 import { EntitySummary } from "./EntitySummary";
 import { EntityList } from "./EntityList";
 import { RepresentationResults, RequestFormData } from "@/types";
+import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
 
 export const NERHomepage = () => {
+  const { token, userProfile } = useKeycloakAuth();
   const [formData, setFormData] = useState<RequestFormData>({
     text: "",
     entity_types: "",
@@ -29,7 +31,7 @@ export const NERHomepage = () => {
     setIsProcessing(true);
     setError(null);
     try {
-      const analysisResults = await analyzeEntities(formData);
+      const analysisResults = await analyzeEntities(formData, token);
       setResults(analysisResults);
     } catch (error) {
       const errorMessage =

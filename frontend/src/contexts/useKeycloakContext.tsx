@@ -53,7 +53,7 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
     initialized.current = true;
     keycloak
       .init({
-        onLoad: "login-required",
+        onLoad: "check-sso",
         scope: "openid profile email",
         checkLoginIframe: false,
       })
@@ -63,7 +63,7 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
           setToken(keycloak.token ?? null);
           localStorage.setItem(
             LOCAL_STORAGE_KEYS.ID_TOKEN,
-            keycloak.token ?? null,
+            keycloak.token ?? null
           );
           if (!userProfile) {
             if (keycloak.tokenParsed?.email) {
@@ -74,8 +74,7 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
                     ? ` ${keycloak.tokenParsed.family_name}`
                     : ""),
                 email: keycloak.tokenParsed.email || "",
-                roles:
-                  keycloak.tokenParsed?.realm_access?.roles || [],
+                roles: keycloak.tokenParsed?.realm_access?.roles || [],
               };
               setUserProfile(profile);
               setToLocalStorage(LOCAL_STORAGE_KEYS.USER_PROFILE, profile);
@@ -91,7 +90,9 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
                   setToken(keycloak.token ?? null);
                 }
               })
-              .catch(error => console.error("Failed to refresh token", error));
+              .catch((error) =>
+                console.error("Failed to refresh token", error)
+              );
           }, 20000);
         }
       })
@@ -100,7 +101,6 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
       })
       .finally(() => setAuthInProgress(false));
   }, []);
-
 
   const value = useMemo<KeycloakContextType>(
     () => ({

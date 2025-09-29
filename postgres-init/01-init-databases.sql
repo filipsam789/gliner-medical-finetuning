@@ -33,3 +33,16 @@ CREATE TABLE IF NOT EXISTS experiments.experiment_runs (
     experiment_id INTEGER REFERENCES experiments.experiments(id) ON DELETE CASCADE,
     date_ran TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS experiments.daily_usage (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(128) NOT NULL,
+    usage_date DATE NOT NULL,
+    usage_count INTEGER DEFAULT 0 NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create unique index for efficient queries and data integrity
+CREATE UNIQUE INDEX IF NOT EXISTS idx_daily_usage_user_date 
+ON experiments.daily_usage (user_id, usage_date);

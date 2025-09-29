@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -6,7 +6,12 @@ import {
   CardContent,
   Button,
   Stack,
+  Alert,
+  Snackbar,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
+import { subscribeUser } from "@/api/apiCalls";
 
 const features = [
   {
@@ -27,6 +32,39 @@ const features = [
 ];
 
 const SubscriptionsPage: React.FC = () => {
+  const { userProfile, token, isAuthenticated } = useKeycloakAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+  const [isUpgrading, setIsUpgrading] = useState(false);
+
+  const isPremiumUser = userProfile?.roles?.includes("premium_user") || false;
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  const handleUpgrade = async () => {
+    try {
+      setIsUpgrading(true);
+      setError("");
+      await subscribeUser(token);
+      setSuccess(
+        "Successfully upgraded to Premium! Welcome to unlimited features!"
+      );
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      setError("Failed to upgrade to premium. Please try again.");
+    } finally {
+      setIsUpgrading(false);
+    }
+  };
+
+  const handleCloseError = () => setError("");
+  const handleCloseSuccess = () => setSuccess("");
+
   return (
     <Box
       sx={{
@@ -59,9 +97,24 @@ const SubscriptionsPage: React.FC = () => {
                 </Box>
               ))}
             </Stack>
-            <Button variant="outlined" color="primary" fullWidth disabled>
-              Current Plan
-            </Button>
+            {!isAuthenticated ? (
+              <Button
+                variant="outlined"
+                color="primary"
+                fullWidth
+                onClick={handleLogin}
+              >
+                Login to Get Started
+              </Button>
+            ) : !isPremiumUser ? (
+              <Button variant="outlined" color="primary" fullWidth disabled>
+                Current Plan
+              </Button>
+            ) : (
+              <Button variant="outlined" color="success" fullWidth disabled>
+                ✓ Upgraded from Free
+              </Button>
+            )}
           </CardContent>
         </Card>
         {/* Premium Plan */}
@@ -70,11 +123,14 @@ const SubscriptionsPage: React.FC = () => {
             minWidth: 340,
             boxShadow: 4,
             borderRadius: 3,
-            border: "2px solid #d32f2f",
+            border: isPremiumUser ? "2px solid #2e7d32" : "2px solid #d32f2f",
           }}
         >
           <CardContent>
-            <Typography variant="h5" sx={{ mb: 2, color: "#d32f2f" }}>
+            <Typography
+              variant="h5"
+              sx={{ mb: 2, color: isPremiumUser ? "#2e7d32" : "#d32f2f" }}
+            >
               Premium
             </Typography>
             <Typography variant="h4" sx={{ mb: 2 }}>
@@ -93,12 +149,63 @@ const SubscriptionsPage: React.FC = () => {
                 </Box>
               ))}
             </Stack>
-            <Button variant="contained" color="secondary" fullWidth>
-              Upgrade
-            </Button>
+            {!isAuthenticated ? (
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                onClick={handleLogin}
+              >
+                Login to Upgrade
+              </Button>
+            ) : isPremiumUser ? (
+              <Button variant="contained" color="success" fullWidth disabled>
+                Current Plan
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                onClick={handleUpgrade}
+                disabled={isUpgrading}
+              >
+                {isUpgrading ? "Upgrading..." : "Upgrade"}
+              </Button>
+            )}
           </CardContent>
         </Card>
       </Box>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseError}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {error}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!success}
+        autoHideDuration={4000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSuccess}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {success}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
