@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import NavBar from "./components/NavBar";
+import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider } from "@emotion/react";
 import { customTheme } from "./theme/theme";
 import { CssBaseline, Box } from "@mui/material";
@@ -18,6 +19,7 @@ const App = () => (
   <ThemeProvider theme={customTheme}>
     <CssBaseline />
     <BrowserRouter>
+      <ScrollToTop />
       <AuthProvider>
         <NavBar />
         <Box sx={{ paddingTop: "100px" }}>
