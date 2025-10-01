@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useKeycloakAuth();
   const location = useLocation();
 
-  const publicRoutes = ["/subscriptions"];
+  const publicRoutes = ["/subscriptions", "/", "/subscription-success"];
   const isPublicRoute = publicRoutes.includes(location.pathname);
 
   useEffect(() => {

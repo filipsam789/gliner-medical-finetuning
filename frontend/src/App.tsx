@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ExperimentsPage from "./pages/ExperimentsPage";
 import ExperimentDetailsPage from "./pages/ExperimentDetailsPage";
 import SubscriptionsPage from "./pages/SubscriptionsPage";
+import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import DocumentDetailsPage from "./pages/DocumentDetailsPage";
 import { NERHomepage } from "./components/NERHomepage";
 import { AuthProvider } from "./contexts/useAuth";
@@ -22,16 +23,9 @@ const App = () => (
       <ScrollToTop />
       <AuthProvider>
         <NavBar />
-        <Box sx={{ paddingTop: "100px" }}>
+        <Box>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/" element={<Index />} />
             <Route
               path="/extract-entities"
               element={
@@ -66,6 +60,14 @@ const App = () => (
             />
             <Route path="/login" element={<Login />} />
             <Route path="/subscriptions" element={<SubscriptionsPage />} />
+            <Route
+              path="/subscription-success"
+              element={
+                <ProtectedRoute>
+                  <SubscriptionSuccessPage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Box>

@@ -8,7 +8,6 @@ from utils import premium_user_required
 
 EXPERIMENTS_TABLE_NAME = "experiments"
 DATABASE_URL = os.getenv("POSTGRES_URL")
-print("Database url", DATABASE_URL)
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 

@@ -65,6 +65,7 @@ export const NERHomepage = () => {
           background:
             "linear-gradient(180deg, hsl(0 0% 98%), hsl(240 4.8% 95.9%))",
           p: 3,
+          pt: 9,
         }}
       >
         <Box

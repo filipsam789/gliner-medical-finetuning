@@ -4,7 +4,7 @@ export const mainTheme = createTheme({
   cssVariables: true,
   palette: {
     primary: {
-      main: "#3e84bf",
+      main: "rgb(23, 131, 239)",
       contrastText: "hsl(0, 0%, 98%)",
     },
     secondary: {
@@ -67,35 +67,36 @@ export const mainTheme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          '& .MuiOutlinedInput-root': {
+          "& .MuiOutlinedInput-root": {
             backgroundColor: "hsl(0, 0%, 100%)",
-            '& fieldset': {
+            "& fieldset": {
               borderColor: "hsl(240, 5.9%, 90%)",
             },
-            '&:hover fieldset': {
-              borderColor: "#3e84bf",
+            "&:hover fieldset": {
+              borderColor: "rgb(23, 131, 239)",
             },
-            '&.Mui-focused fieldset': {
-              borderColor: "#3e84bf",
-              boxShadow: "0 0 0 2px #3e84bf / 0.15",
+            "&.Mui-focused fieldset": {
+              borderColor: "rgb(23, 131, 239)",
+              boxShadow: "0 0 0 2px rgba(23, 131, 239, 0.15)",
             },
-            '& input::placeholder, & textarea::placeholder': {
+            "& input::placeholder, & textarea::placeholder": {
               fontSize: "1rem",
               opacity: 0.7,
               color: "hsl(240, 3.8%, 46.1%)",
             },
-            '& input, & textarea': {
+            "& input, & textarea": {
               fontSize: "1rem",
             },
-            '& input:-webkit-autofill, & textarea:-webkit-autofill': {
-              WebkitBoxShadow: '0 0 0 1000px hsl(0 0% 100%) inset',
-              WebkitTextFillColor: 'hsl(240, 10%, 3.9%)',
-              caretColor: 'hsl(240, 10%, 3.9%)',
-              transition: 'background-color 9999s ease-out 0s',
+            "& input:-webkit-autofill, & textarea:-webkit-autofill": {
+              WebkitBoxShadow: "0 0 0 1000px hsl(0 0% 100%) inset",
+              WebkitTextFillColor: "hsl(240, 10%, 3.9%)",
+              caretColor: "hsl(240, 10%, 3.9%)",
+              transition: "background-color 9999s ease-out 0s",
             },
-            '& input:-webkit-autofill:focus, & textarea:-webkit-autofill:focus': {
-              WebkitBoxShadow: '0 0 0 1000px hsl(0 0% 100%) inset',
-            },
+            "& input:-webkit-autofill:focus, & textarea:-webkit-autofill:focus":
+              {
+                WebkitBoxShadow: "0 0 0 1000px hsl(0 0% 100%) inset",
+              },
           },
         },
       },
@@ -110,14 +111,16 @@ export const mainTheme = createTheme({
           fontSize: "0.875rem",
         },
         containedPrimary: {
-          background: "linear-gradient(135deg, #3e84bf, #67b1ed)",
+          background:
+            "linear-gradient(135deg, rgb(23, 131, 239), rgba(66, 165, 245, 0.9))",
           boxShadow: "none",
-          '&:hover': {
-            background: "linear-gradient(135deg, #197aca, #85c0f1)",
-            boxShadow: "0 0 40px #3e84bf / 0.15 ",
+          "&:hover": {
+            background:
+              "linear-gradient(135deg, rgba(25, 118, 210, 0.9), rgba(66, 165, 245, 1))",
+            boxShadow: "0 0 40px rgba(23, 131, 239, 0.15)",
             transform: "scale(1.02)",
           },
-          '&:disabled': {
+          "&:disabled": {
             background: "hsl(240, 4.8%, 95.9%)",
             color: "hsl(240, 3.8%, 46.1%)",
           },
@@ -127,16 +130,16 @@ export const mainTheme = createTheme({
     MuiFormControl: {
       styleOverrides: {
         root: {
-          '& .MuiOutlinedInput-root': {
+          "& .MuiOutlinedInput-root": {
             backgroundColor: "hsl(0, 0%, 100%)",
-            '& fieldset': {
+            "& fieldset": {
               borderColor: "hsl(240, 5.9%, 90%)",
             },
-            '&:hover fieldset': {
-              borderColor: "#3e84bf",
+            "&:hover fieldset": {
+              borderColor: "rgb(23, 131, 239)",
             },
-            '&.Mui-focused fieldset': {
-              borderColor: "#3e84bf",
+            "&.Mui-focused fieldset": {
+              borderColor: "rgb(23, 131, 239)",
             },
           },
         },
@@ -145,9 +148,9 @@ export const mainTheme = createTheme({
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: "#3e84bf",
-          '&.Mui-checked': {
-            color: "#3e84bf",
+          color: "rgb(23, 131, 239)",
+          "&.Mui-checked": {
+            color: "rgb(23, 131, 239)",
           },
         },
       },
@@ -169,11 +172,11 @@ export const mainTheme = createTheme({
     MuiSlider: {
       styleOverrides: {
         root: {
-          color: "#3e84bf",
+          color: "rgb(23, 131, 239)",
           maxWidth: "90%",
-          '& .MuiSlider-markLabel': {
-            fontSize: '0.875rem',
-            color: 'hsl(240, 3.8%, 46.1%)',
+          "& .MuiSlider-markLabel": {
+            fontSize: "0.875rem",
+            color: "hsl(240, 3.8%, 46.1%)",
           },
         },
       },
@@ -181,27 +184,27 @@ export const mainTheme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#fafafa',
-          color: '#333',
-          borderBottom: '1px solid #e0e0e0',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          height: '100px',
+          backgroundColor: "#fafafa",
+          color: "#333",
+          borderBottom: "1px solid #e0e0e0",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          height: "100px",
         },
       },
     },
     MuiToolbar: {
       styleOverrides: {
         root: {
-          minHeight: '100px !important',
-          height: '100px',
-          justifyContent: 'space-between',
+          minHeight: "100px !important",
+          height: "100px",
+          justifyContent: "space-between",
         },
       },
     },
     MuiAvatar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#e0e0e0',
+          backgroundColor: "#e0e0e0",
           width: 32,
           height: 32,
         },

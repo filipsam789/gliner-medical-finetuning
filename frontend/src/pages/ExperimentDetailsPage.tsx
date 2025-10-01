@@ -16,6 +16,7 @@ import DocumentsSection from "../components/DocumentsSection";
 import AddDocumentDialog from "../components/AddDocumentDialog";
 import DeleteDocumentDialog from "../components/DeleteDocumentDialog";
 import RunExperimentDialog from "../components/RunExperimentDialog";
+import ExperimentEntitySummary from "../components/ExperimentEntitySummary";
 
 const ExperimentDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +28,9 @@ const ExperimentDetailsPage: React.FC = () => {
   const [runs, setRuns] = useState<ExperimentRun[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState<"documents" | "runs">("documents");
+  const [activeTab, setActiveTab] = useState<
+    "documents" | "runs" | "entity-summary"
+  >("documents");
 
   const [addOpen, setAddOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -88,12 +91,13 @@ const ExperimentDetailsPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh", height: "100%", pt: 8 }}>
       <Sidebar
         experimentName={experiment?.name}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onRunClick={() => setRunOpen(true)}
+        documentsCount={documents.length}
       />
 
       <Box sx={{ flex: 1, p: 4 }}>
@@ -105,6 +109,8 @@ const ExperimentDetailsPage: React.FC = () => {
 
         {activeTab === "runs" ? (
           <RunsTable runs={runs} />
+        ) : activeTab === "entity-summary" ? (
+          <ExperimentEntitySummary runs={runs} />
         ) : (
           <DocumentsSection
             documents={documents}

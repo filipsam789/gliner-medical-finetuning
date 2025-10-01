@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from fastapi import HTTPException
 from gliner import GLiNER
 import constants
@@ -8,6 +8,7 @@ from pymongo.errors import ConnectionFailure
 from datetime import datetime
 import os
 import hashlib
+from gemini_client import get_gemini_client
 
 
 def parse_entity_types(raw: str) -> List[str]:
@@ -31,8 +32,10 @@ def parse_entity_types(raw: str) -> List[str]:
     return unique
 
 MODEL_REGISTRY = {}
-def get_model(name: str) -> GLiNER:
-    if name not in MODEL_REGISTRY:
+def get_model(name: str) -> Union[GLiNER, str]:
+    if name == constants.GEMINI_MODEL_NAME_FRONTEND:
+        return "gemini"
+    elif name not in MODEL_REGISTRY:
         if name == constants.DEFAULT_MODEL_NAME_FRONTEND:
             path = constants.DEFAULT_MODEL_NAME
         elif name == constants.FINETUNED_MODEL_NAME_FRONTEND:
@@ -94,19 +97,36 @@ def store_training_text(text: str) -> bool:
             detail="Failed to store text for training."
         )
 
-def predict_entities_batch(model_name: str, entity_types_raw: str, texts: list, threshold: float, allow_multi_label: bool):
+async def predict_entities_batch(model_name: str, entity_types_raw: str, texts: list, threshold: float, allow_multi_label: bool):
     entity_types = parse_entity_types(entity_types_raw)
     model = get_model(model_name)
     results = []
-    for text in texts:
-        try:
-            entities = model.predict_entities(
-                text,
-                entity_types,
-                threshold=threshold,
-                allow_multi_label=allow_multi_label,
-            )
-            results.append(entities)
-        except Exception as e:
-            results.append([]) 
+    
+    if model == "gemini":
+        gemini_client = get_gemini_client()
+        for text in texts:
+            try:
+                entities = await gemini_client.predict_entities(
+                    text,
+                    entity_types,
+                    threshold=threshold,
+                    multi_label=allow_multi_label,
+                )
+                results.append(entities)
+            except Exception as e:
+                print(f"Error processing text with Gemini: {e}")
+                results.append([])
+    else:
+        for text in texts:
+            try:
+                entities = model.predict_entities(
+                    text,
+                    entity_types,
+                    threshold=threshold,
+                    multi_label=allow_multi_label,
+                )
+                results.append(entities)
+            except Exception as e:
+                print(f"Error processing text with GLiNER: {e}")
+                results.append([]) 
     return results

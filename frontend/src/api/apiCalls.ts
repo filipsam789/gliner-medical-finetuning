@@ -378,3 +378,70 @@ export const getExperimentRunResults = async (token: string, runId: string) => {
     throw error;
   }
 };
+
+export const createCheckoutSession = async (token: string) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/create-checkout-session`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error creating checkout session");
+    throw error;
+  }
+};
+
+export const getCheckoutSession = async (token: string, sessionId: string) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/checkout-session/${sessionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching checkout session");
+    throw error;
+  }
+};
+
+export const getSubscriptionStatus = async (token: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/subscription-status`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error fetching subscription status");
+    throw error;
+  }
+};
+
+export const createPortalSession = async (token: string) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/create-portal-session`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error creating portal session");
+    throw error;
+  }
+};

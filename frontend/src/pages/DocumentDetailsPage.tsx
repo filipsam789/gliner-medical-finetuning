@@ -161,6 +161,7 @@ const DocumentDetailsPage: React.FC = () => {
           alignItems: "center",
           minHeight: "100vh",
           bgcolor: "#f5f7fa",
+          pt: 12,
         }}
       >
         <CircularProgress />
@@ -193,12 +194,21 @@ const DocumentDetailsPage: React.FC = () => {
         minHeight: "100vh",
         bgcolor: "#f5f7fa",
         p: 3,
+        pt: 12,
       }}
     >
       {experimentRuns.length > 0 && (
         <Box sx={{ width: "100%", maxWidth: 700, mb: 3 }}>
           <FormControl fullWidth>
-            <InputLabel id="experiment-runs-select-label">
+            <InputLabel
+              id="experiment-runs-select-label"
+              sx={{
+                color: "rgb(23, 131, 239)",
+                "&.Mui-focused": {
+                  color: "rgb(23, 131, 239)",
+                },
+              }}
+            >
               Select Experiment Run
             </InputLabel>
             <Select
@@ -206,6 +216,32 @@ const DocumentDetailsPage: React.FC = () => {
               value={selectedRun}
               label="Select Experiment Run"
               onChange={(e) => handleRunChange(e.target.value)}
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "rgb(23, 131, 239)",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "rgb(23, 131, 239)",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "rgb(23, 131, 239)",
+                },
+                "& .MuiSelect-icon": {
+                  color: "rgb(23, 131, 239)",
+                },
+                "& .MuiMenuItem-root.Mui-selected": {
+                  backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                  "&:hover": {
+                    backgroundColor: "rgba(23, 131, 239, 0.2) !important",
+                  },
+                },
+                "& .MuiMenuItem-root:hover": {
+                  backgroundColor: "rgba(23, 131, 239, 0.08)",
+                },
+                "& .MuiMenuItem-root.Mui-selected.MuiButtonBase-root": {
+                  backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                },
+              }}
             >
               {experimentRuns.map((run) => (
                 <MenuItem key={run.id} value={run.id.toString()}>
@@ -258,7 +294,6 @@ const DocumentDetailsPage: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Entity Summary and List Section */}
       {selectedRun && results && (
         <Box sx={{ width: "100%", maxWidth: 700, mt: 3 }}>
           {resultsLoading ? (

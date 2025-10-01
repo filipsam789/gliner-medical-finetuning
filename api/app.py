@@ -10,6 +10,7 @@ from experiments import router as experiments_router
 from documents import router as documents_router
 from experiment_runs import router as experiment_runs_router
 from daily_usage import router as daily_usage_router
+from subscriptions import router as subscriptions_router
 
 app = FastAPI()
 
@@ -32,6 +33,7 @@ app.include_router(experiments_router)
 app.include_router(documents_router)
 app.include_router(experiment_runs_router)
 app.include_router(daily_usage_router)
+app.include_router(subscriptions_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -88,12 +90,22 @@ async def predict_entities(req: EntityRequest, request: Request):
         raise HTTPException(status_code=500, detail=f"Failed to load model: {e}")
 
     try:
-        entities = model.predict_entities(
-            req.text,
-            entity_types,
-            threshold=req.threshold,
-            multi_label=req.allow_multi_labeling,
-        )
+        if model == "gemini":
+            from gemini_client import get_gemini_client
+            gemini_client = get_gemini_client()
+            entities = await gemini_client.predict_entities(
+                req.text,
+                entity_types,
+                threshold=req.threshold,
+                multi_label=req.allow_multi_labeling,
+            )
+        else:
+            entities = model.predict_entities(
+                req.text,
+                entity_types,
+                threshold=req.threshold,
+                multi_label=req.allow_multi_labeling,
+            )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Inference error: {e}")

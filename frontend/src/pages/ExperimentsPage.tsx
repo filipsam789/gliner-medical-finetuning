@@ -17,7 +17,11 @@ import {
 import { Plus, Trash2 } from "lucide-react";
 import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
 import { useNavigate } from "react-router-dom";
-import { getExperiments, createExperiment, deleteExperiment } from "@/api/apiCalls";
+import {
+  getExperiments,
+  createExperiment,
+  deleteExperiment,
+} from "@/api/apiCalls";
 
 interface Experiment {
   id: number;
@@ -37,7 +41,11 @@ const ExperimentsPage: React.FC = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
-    if (!userProfile || !Array.isArray(userProfile.roles) || !userProfile.roles.includes("premium_user")) {
+    if (
+      !userProfile ||
+      !Array.isArray(userProfile.roles) ||
+      !userProfile.roles.includes("premium_user")
+    ) {
       navigate("/not-found");
     }
   }, [userProfile, navigate]);
@@ -92,7 +100,7 @@ const ExperimentsPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: 4, pt: 10 }}>
       <Typography variant="h4" gutterBottom>
         Experiments
       </Typography>
@@ -106,7 +114,9 @@ const ExperimentsPage: React.FC = () => {
       </Button>
       <Box sx={{ clear: "both" }} />
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>{error}</Alert>
+        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>
+          {error}
+        </Alert>
       )}
       <Stack direction="row" spacing={3} flexWrap="wrap">
         {experiments.map((exp) => (
@@ -123,12 +133,24 @@ const ExperimentsPage: React.FC = () => {
               sx={{ objectFit: "cover" }}
             />
             <CardContent>
-              <Typography variant="h6" noWrap>{exp.name}</Typography>
+              <Typography variant="h6" noWrap>
+                {exp.name}
+              </Typography>
             </CardContent>
             <Button
-              sx={{ position: "absolute", right: 8, bottom: 8, minWidth: 0, p: 1 }}
+              sx={{
+                position: "absolute",
+                right: 8,
+                bottom: 8,
+                minWidth: 0,
+                p: 1,
+              }}
               color="error"
-              onClick={e => { e.stopPropagation(); setDeleteId(exp.id); setConfirmOpen(true); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteId(exp.id);
+                setConfirmOpen(true);
+              }}
             >
               <Trash2 size={20} />
             </Button>
@@ -157,11 +179,15 @@ const ExperimentsPage: React.FC = () => {
       <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
         <DialogTitle>Delete Experiment</DialogTitle>
         <DialogContent>
-          <Typography>Do you want to delete this experiment and all of its contents?</Typography>
+          <Typography>
+            Do you want to delete this experiment and all of its contents?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
-          <Button onClick={handleDelete} color="error" disabled={loading}>Delete</Button>
+          <Button onClick={handleDelete} color="error" disabled={loading}>
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

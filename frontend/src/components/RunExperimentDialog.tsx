@@ -50,10 +50,16 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
   const [running, setRunning] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [validationError, setValidationError] = useState("");
 
   const handleRun = async () => {
+    if (form.entity_types.trim().length === 0) {
+      setValidationError("Please select at least one label to extract.");
+      return;
+    }
     setRunning(true);
     setError("");
+    setValidationError("");
     setSuccess(false);
     try {
       await addExperimentRun(token, experimentId!, {
@@ -77,6 +83,7 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
   const handleClose = () => {
     setSuccess(false);
     setError("");
+    setValidationError("");
     setRunning(false);
     onClose();
   };
@@ -91,7 +98,7 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
     >
       <DialogTitle>Run Experiment</DialogTitle>
       <DialogContent>
-        {!success && !error && !running && (
+        {(!success && !error && !running) || validationError ? (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 1 }}>
             <Box>
               <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
@@ -104,6 +111,32 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
                     setForm((f) => ({ ...f, model: e.target.value }))
                   }
                   displayEmpty
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgb(23, 131, 239)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgb(23, 131, 239)",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgb(23, 131, 239)",
+                    },
+                    "& .MuiSelect-icon": {
+                      color: "rgb(23, 131, 239)",
+                    },
+                    "& .MuiMenuItem-root.Mui-selected": {
+                      backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                      "&:hover": {
+                        backgroundColor: "rgba(23, 131, 239, 0.2) !important",
+                      },
+                    },
+                    "& .MuiMenuItem-root:hover": {
+                      backgroundColor: "rgba(23, 131, 239, 0.08)",
+                    },
+                    "& .MuiMenuItem-root.Mui-selected.MuiButtonBase-root": {
+                      backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                    },
+                  }}
                 >
                   {Object.entries(MODEL_OPTIONS).map(([key, label]) => (
                     <MenuItem key={key} value={key}>
@@ -161,14 +194,19 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
                 fullWidth
                 placeholder={entity_types_placeholder}
                 value={form.entity_types}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, entity_types: e.target.value }))
-                }
+                onChange={(e) => {
+                  setForm((f) => ({ ...f, entity_types: e.target.value }));
+                  if (validationError && e.target.value.trim().length > 0) {
+                    setValidationError("");
+                  }
+                }}
                 variant="outlined"
+                error={!!validationError}
+                helperText={validationError}
               />
             </Box>
           </Box>
-        )}
+        ) : null}
         {success && (
           <Box
             sx={{
@@ -235,7 +273,6 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
           </Box>
         )}
 
-        {/* Loading State */}
         {running && (
           <Box
             sx={{

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   AppBar,
   Toolbar,
@@ -8,8 +8,22 @@ import {
   Button,
   ThemeProvider,
   Alert,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  IconButton,
+  Link as MuiLink,
+  Collapse,
 } from "@mui/material";
-import { UserCircle } from "lucide-react";
+import {
+  UserCircle,
+  LogOut,
+  ChevronDown,
+  ChevronRight,
+  FileText,
+} from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
 import { useAuth } from "@/contexts/useAuth";
@@ -23,22 +37,52 @@ const NavBar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState<string>("");
+  const [profileAnchorEl, setProfileAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+  const [experimentsMenuOpen, setExperimentsMenuOpen] = useState(false);
+  const experimentsMenuRef = useRef<HTMLDivElement>(null);
 
-  const publicRoutes = ["/subscriptions", "/login"];
+  const publicRoutes = ["/subscriptions", "/"];
   const isPublicRoute = publicRoutes.includes(location.pathname);
 
   const logout = () => {
     handleLogoutRedirect();
     setRoles(undefined);
+    setProfileAnchorEl(null);
   };
 
-  const goToExtractEntities = () => {
-    navigate("/extract-entities");
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setProfileAnchorEl(event.currentTarget);
   };
 
-  const goToExperiments = () => {
-    navigate("/experiments");
+  const handleProfileMenuClose = () => {
+    setProfileAnchorEl(null);
   };
+
+  const handleExperimentsMenuToggle = () => {
+    setExperimentsMenuOpen(!experimentsMenuOpen);
+  };
+
+  const isExperimentsPage =
+    location.pathname.startsWith("/experiments") ||
+    location.pathname.startsWith("/documents");
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        experimentsMenuRef.current &&
+        !experimentsMenuRef.current.contains(event.target as Node)
+      ) {
+        setExperimentsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (!isAuthenticated && !isPublicRoute) {
     return null;
@@ -46,74 +90,232 @@ const NavBar: React.FC = () => {
 
   return (
     <ThemeProvider theme={mainTheme}>
-      <AppBar position="fixed" elevation={2}>
-        <Toolbar>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          backgroundColor: "rgba(255, 255, 255, 0.6)",
+          backdropFilter: "blur(15px)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+          height: "64px",
+          maxHeight: "64px",
+        }}
+      >
+        <Toolbar
+          sx={{
+            justifyContent: "space-between",
+            px: { xs: 2, md: 4 },
+            py: 0,
+            minHeight: "64px !important",
+            height: "64px",
+            maxHeight: "64px",
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Link to="/">
-              <Typography variant="h6">GLiNER Medical</Typography>
+            <Link
+              to="/"
+              style={{
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                component="img"
+                src="/logo.png"
+                alt="MedLexica"
+                sx={{
+                  height: 56,
+                  width: "auto",
+                  mr: 1,
+                }}
+              />
             </Link>
           </Box>
-          <Stack direction="row" spacing={2}>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
             {isAuthenticated ? (
               <>
-                <Button
-                  onClick={goToExtractEntities}
-                  variant="contained"
-                  color="primary"
-                  size="small"
+                <MuiLink
+                  component={Link}
+                  to="/extract-entities"
+                  sx={{
+                    color:
+                      location.pathname === "/extract-entities"
+                        ? "rgb(23, 131, 239)"
+                        : "text.primary",
+                    textDecoration: "none",
+                    fontWeight:
+                      location.pathname === "/extract-entities" ? 600 : 400,
+                    fontSize: "0.9rem",
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 1,
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      backgroundColor: "rgba(25, 118, 210, 0.08)",
+                      color: "rgb(23, 131, 239)",
+                    },
+                  }}
                 >
-                  Extract entities
-                </Button>
-                <Button
-                  onClick={() => navigate("/subscriptions")}
-                  variant="contained"
-                  color="secondary"
-                  size="small"
+                  Extract Entities
+                </MuiLink>
+                <MuiLink
+                  component={Link}
+                  to="/subscriptions"
+                  sx={{
+                    color:
+                      location.pathname === "/subscriptions"
+                        ? "rgb(23, 131, 239)"
+                        : "text.primary",
+                    textDecoration: "none",
+                    fontWeight:
+                      location.pathname === "/subscriptions" ? 600 : 400,
+                    fontSize: "0.9rem",
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 1,
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      backgroundColor: "rgba(25, 118, 210, 0.08)",
+                      color: "rgb(23, 131, 239)",
+                    },
+                  }}
                 >
-                  Subscription plans
-                </Button>
+                  Plans
+                </MuiLink>
                 {userProfile &&
                   Array.isArray(userProfile.roles) &&
                   userProfile.roles.includes("premium_user") && (
-                    <Button
-                      onClick={goToExperiments}
-                      variant="contained"
-                      color="primary"
-                      size="small"
+                    <MuiLink
+                      component={Link}
+                      to="/experiments"
+                      sx={{
+                        color: isExperimentsPage
+                          ? "rgb(23, 131, 239)"
+                          : "text.primary",
+                        textDecoration: "none",
+                        fontWeight: isExperimentsPage ? 600 : 400,
+                        fontSize: "0.9rem",
+                        px: 1.5,
+                        py: 0.5,
+                        borderRadius: 1,
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          backgroundColor: "rgba(25, 118, 210, 0.08)",
+                          color: "rgb(23, 131, 239)",
+                        },
+                      }}
                     >
-                      Create experiments
-                    </Button>
+                      Experiments
+                    </MuiLink>
                   )}
               </>
             ) : (
-              <Button
-                onClick={() => navigate("/login")}
-                variant="contained"
-                color="primary"
-                size="small"
+              <MuiLink
+                component={Link}
+                to="/login"
+                sx={{
+                  color: "white",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                  fontSize: "0.9rem",
+                  px: 2.5,
+                  py: 0.75,
+                  borderRadius: 3,
+                  background:
+                    "linear-gradient(135deg, rgb(23, 131, 239) 0%, rgba(66, 165, 245, 0.9) 100%)",
+                  boxShadow: "0 4px 15px rgba(23, 131, 239, 0.3)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease",
+                  textShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
+                  "&:hover": {
+                    background:
+                      "linear-gradient(135deg, rgba(23, 131, 239, 0.9) 0%, rgba(66, 165, 245, 0.8) 100%)",
+                    boxShadow: "0 6px 20px rgba(23, 131, 239, 0.4)",
+                    transform: "translateY(-2px)",
+                    borderColor: "rgba(255, 255, 255, 0.3)",
+                  },
+                  "&:active": {
+                    transform: "translateY(0px)",
+                    boxShadow: "0 2px 10px rgba(23, 131, 239, 0.3)",
+                  },
+                }}
               >
                 Login
-              </Button>
+              </MuiLink>
             )}
-          </Stack>
+          </Box>
 
           {isAuthenticated && (
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <UserCircle size={32} color="#9e9e9e" />
-                <Typography variant="subtitle1">
-                  {userProfile?.name || "User"}
-                </Typography>
-              </Stack>
-              <Button
-                onClick={logout}
-                variant="contained"
-                color="primary"
-                size="small"
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <IconButton
+                onClick={handleProfileMenuOpen}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 2,
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    backgroundColor: "rgba(25, 118, 210, 0.08)",
+                  },
+                }}
               >
-                Logout
-              </Button>
-            </Stack>
+                <UserCircle size={20} color="#666" />
+                <ChevronDown size={14} color="#666" />
+              </IconButton>
+
+              <Menu
+                anchorEl={profileAnchorEl}
+                open={Boolean(profileAnchorEl)}
+                onClose={handleProfileMenuClose}
+                PaperProps={{
+                  elevation: 8,
+                  sx: {
+                    mt: 1,
+                    minWidth: 200,
+                    borderRadius: 2,
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                  },
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              >
+                <MenuItem disabled>
+                  <ListItemIcon>
+                    <UserCircle size={20} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={userProfile?.name || "User"}
+                    secondary={userProfile?.email || ""}
+                    primaryTypographyProps={{
+                      fontWeight: 600,
+                      fontSize: "0.8rem",
+                    }}
+                    secondaryTypographyProps={{ fontSize: "0.8rem" }}
+                  />
+                </MenuItem>
+                <Divider />
+                <MenuItem
+                  onClick={logout}
+                  sx={{
+                    fontSize: "0.8rem",
+                    "& .MuiListItemText-primary": {
+                      fontSize: "0.8rem",
+                    },
+                  }}
+                >
+                  <ListItemIcon>
+                    <LogOut size={20} />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </MenuItem>
+              </Menu>
+            </Box>
           )}
         </Toolbar>
         {error && (

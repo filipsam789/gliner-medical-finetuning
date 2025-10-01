@@ -46,3 +46,21 @@ CREATE TABLE IF NOT EXISTS experiments.daily_usage (
 -- Create unique index for efficient queries and data integrity
 CREATE UNIQUE INDEX IF NOT EXISTS idx_daily_usage_user_date 
 ON experiments.daily_usage (user_id, usage_date);
+
+CREATE TABLE IF NOT EXISTS experiments.subscriptions (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(128) NOT NULL UNIQUE,
+    stripe_customer_id VARCHAR(255),
+    stripe_subscription_id VARCHAR(255),
+    status VARCHAR(50) NOT NULL,
+    current_period_start TIMESTAMP,
+    current_period_end TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create indexes for efficient queries
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON experiments.subscriptions (user_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_stripe_customer_id ON experiments.subscriptions (stripe_customer_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_stripe_subscription_id ON experiments.subscriptions (stripe_subscription_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON experiments.subscriptions (status);

@@ -65,11 +65,12 @@ async def add_experiment_run(experiment_id: int, data: dict, request: Request, u
     session.close()
     texts = [d.text for d in docs]
     doc_ids = [d.id for d in docs]
+    doc_titles = [d.title for d in docs]
     from helpers import predict_entities_batch, initialize_mongodb
-    predictions = predict_entities_batch(model, labels_to_extract, texts, threshold, allow_multilabeling)
+    predictions = await predict_entities_batch(model, labels_to_extract, texts, threshold, allow_multilabeling)
     results = []
-    for doc_id, preds in zip(doc_ids, predictions):
-        results.append({"predictions": preds, "document_id": doc_id})
+    for doc_id, doc_title, preds in zip(doc_ids, doc_titles, predictions):
+        results.append({"predictions": preds, "document_id": doc_id, "document_title": doc_title})
     mongo_client = initialize_mongodb()
     mongo_client.database.ExperimentResults.insert_one({
         "experiment_run_id": run_id,

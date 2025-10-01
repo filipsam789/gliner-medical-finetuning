@@ -18,7 +18,8 @@ export const MODEL_OPTIONS = {
   "regular-gliner": "Regular GLiNER",
   "gpt-4": "GPT-4",
   "claude-sonnet-4": "Claude Sonnet 4.0",
-}
+  "gemini-2.5-flash-lite": "Gemini 2.5 Flash Lite",
+};
 
 export const tooltips = {
   text: "Enter the text you want to analyze for named entities.",

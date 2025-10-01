@@ -11,3 +11,5 @@ PyJWT
 dotenv
 sqlalchemy
 psycopg2-binary
+google-genai
+stripe

@@ -23,6 +23,7 @@ import {
   text_placeholder,
   tooltips,
   thresholdSliderMarks,
+  MODEL_OPTIONS,
 } from "@/utils/constants";
 import { getUsageStatus } from "@/api/apiCalls";
 import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
@@ -42,6 +43,13 @@ export const NERForm = ({
 }: NERFormProps) => {
   const { token } = useKeycloakAuth();
   const [usageStatus, setUsageStatus] = useState<UsageStatus | null>(null);
+  const [validationErrors, setValidationErrors] = useState<{
+    text: string;
+    entity_types: string;
+  }>({
+    text: "",
+    entity_types: "",
+  });
 
   useEffect(() => {
     const fetchUsageStatus = async () => {
@@ -63,6 +71,26 @@ export const NERForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const newValidationErrors = {
+      text: "",
+      entity_types: "",
+    };
+
+    if (formData.text.trim().length === 0) {
+      newValidationErrors.text = "Please enter some text to analyze.";
+    }
+
+    if (formData.entity_types.trim().length === 0) {
+      newValidationErrors.entity_types =
+        "Please enter at least one entity label.";
+    }
+
+    setValidationErrors(newValidationErrors);
+
+    if (newValidationErrors.text || newValidationErrors.entity_types) {
+      return;
+    }
 
     await onSubmit(e);
 
@@ -125,12 +153,17 @@ export const NERForm = ({
               minRows={4}
               placeholder={text_placeholder}
               value={formData.text}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, text: e.target.value }))
-              }
+              onChange={(e) => {
+                setFormData((prev) => ({ ...prev, text: e.target.value }));
+                if (validationErrors.text && e.target.value.trim().length > 0) {
+                  setValidationErrors((prev) => ({ ...prev, text: "" }));
+                }
+              }}
               required
               variant="outlined"
               disabled={isDisabled}
+              error={!!validationErrors.text}
+              helperText={validationErrors.text}
             />
           </Box>
 
@@ -155,14 +188,25 @@ export const NERForm = ({
               fullWidth
               placeholder={entity_types_placeholder}
               value={formData.entity_types}
-              onChange={(e) =>
+              onChange={(e) => {
                 setFormData((prev) => ({
                   ...prev,
                   entity_types: e.target.value,
-                }))
-              }
+                }));
+                if (
+                  validationErrors.entity_types &&
+                  e.target.value.trim().length > 0
+                ) {
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    entity_types: "",
+                  }));
+                }
+              }}
               required
               variant="outlined"
+              error={!!validationErrors.entity_types}
+              helperText={validationErrors.entity_types}
             />
           </Box>
 
@@ -232,11 +276,38 @@ export const NERForm = ({
                     setFormData((prev) => ({ ...prev, model: e.target.value }))
                   }
                   displayEmpty
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgb(23, 131, 239)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgb(23, 131, 239)",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgb(23, 131, 239)",
+                    },
+                    "& .MuiSelect-icon": {
+                      color: "rgb(23, 131, 239)",
+                    },
+                    "& .MuiMenuItem-root.Mui-selected": {
+                      backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                      "&:hover": {
+                        backgroundColor: "rgba(23, 131, 239, 0.2) !important",
+                      },
+                    },
+                    "& .MuiMenuItem-root:hover": {
+                      backgroundColor: "rgba(23, 131, 239, 0.08)",
+                    },
+                    "& .MuiMenuItem-root.Mui-selected.MuiButtonBase-root": {
+                      backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                    },
+                  }}
                 >
-                  <MenuItem value="contrastive-gliner">
-                    Contrastive GLiNER
-                  </MenuItem>
-                  <MenuItem value="regular-gliner">Regular GLiNER</MenuItem>
+                  {Object.entries(MODEL_OPTIONS).map(([key, label]) => (
+                    <MenuItem key={key} value={key}>
+                      {label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
