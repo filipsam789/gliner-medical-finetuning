@@ -108,8 +108,15 @@ const ExperimentEntitySummary: React.FC<ExperimentEntitySummaryProps> = ({
 
   if (runs.length === 0) {
     return (
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h6" color="text.secondary">
+      <Box sx={{ textAlign: "center", py: 6 }}>
+        <Typography 
+          variant="h6" 
+          color="text.secondary"
+          sx={{ 
+            fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+            fontWeight: 500
+          }}
+        >
           No experiment runs available
         </Typography>
       </Box>
@@ -118,12 +125,22 @@ const ExperimentEntitySummary: React.FC<ExperimentEntitySummaryProps> = ({
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h5" gutterBottom>
-        Entity Summary by Experiment Run
-      </Typography>
+      <Box sx={{ textAlign: "center", mb: 4 }}>
+        <Typography 
+          variant="h4" 
+          gutterBottom 
+          sx={{ 
+            fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+            color: "primary.main",
+            mb: 3
+          }}
+        >
+          Entity Summary by Experiment Run
+        </Typography>
+      </Box>
 
-      <Box sx={{ mb: 3 }}>
-        <FormControl fullWidth sx={{ maxWidth: 800 }}>
+      <Box sx={{ mb: 3, display: "flex", justifyContent: "center" }}>
+        <FormControl sx={{ maxWidth: 800, width: "100%" }}>
           <InputLabel>Select Experiment Run</InputLabel>
           <Select
             value={selectedRunId}
@@ -176,9 +193,18 @@ const ExperimentEntitySummary: React.FC<ExperimentEntitySummaryProps> = ({
               <EntityList entities={aggregatedEntities} />
             </>
           ) : (
-            <Typography variant="body1" color="text.secondary">
-              No entities found in the selected experiment run.
-            </Typography>
+            <Box sx={{ textAlign: "center", py: 6 }}>
+              <Typography 
+                variant="h6" 
+                color="text.secondary"
+                sx={{ 
+                  fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                  fontWeight: 500
+                }}
+              >
+                No entities found in the selected experiment run.
+              </Typography>
+            </Box>
           )}
         </Box>
       )}

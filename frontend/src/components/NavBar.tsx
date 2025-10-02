@@ -94,7 +94,7 @@ const NavBar: React.FC = () => {
         position="fixed"
         elevation={0}
         sx={{
-          backgroundColor: "rgba(255, 255, 255, 0.6)",
+          backgroundColor: "rgba(255, 255, 255, 0.7)",
           backdropFilter: "blur(15px)",
           borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
           height: "64px",
@@ -142,8 +142,8 @@ const NavBar: React.FC = () => {
                   sx={{
                     color:
                       location.pathname === "/extract-entities"
-                        ? "rgb(23, 131, 239)"
-                        : "text.primary",
+                        ? "rgba(37, 150, 190)"
+                        : "#666",
                     textDecoration: "none",
                     fontWeight:
                       location.pathname === "/extract-entities" ? 600 : 400,
@@ -153,8 +153,8 @@ const NavBar: React.FC = () => {
                     borderRadius: 1,
                     transition: "all 0.2s ease",
                     "&:hover": {
-                      backgroundColor: "rgba(25, 118, 210, 0.08)",
-                      color: "rgb(23, 131, 239)",
+                      backgroundColor: "rgba(37, 150, 190, 0.08)",
+                      color: "rgba(37, 150, 190)",
                     },
                   }}
                 >
@@ -166,8 +166,8 @@ const NavBar: React.FC = () => {
                   sx={{
                     color:
                       location.pathname === "/subscriptions"
-                        ? "rgb(23, 131, 239)"
-                        : "text.primary",
+                        ? "rgba(37, 150, 190)"
+                        : "#666",
                     textDecoration: "none",
                     fontWeight:
                       location.pathname === "/subscriptions" ? 600 : 400,
@@ -177,8 +177,8 @@ const NavBar: React.FC = () => {
                     borderRadius: 1,
                     transition: "all 0.2s ease",
                     "&:hover": {
-                      backgroundColor: "rgba(25, 118, 210, 0.08)",
-                      color: "rgb(23, 131, 239)",
+                      backgroundColor: "rgba(37, 150, 190, 0.08)",
+                      color: "rgba(37, 150, 190)",
                     },
                   }}
                 >
@@ -192,8 +192,8 @@ const NavBar: React.FC = () => {
                       to="/experiments"
                       sx={{
                         color: isExperimentsPage
-                          ? "rgb(23, 131, 239)"
-                          : "text.primary",
+                          ? "rgba(37, 150, 190)"
+                          : "#666",
                         textDecoration: "none",
                         fontWeight: isExperimentsPage ? 600 : 400,
                         fontSize: "0.9rem",
@@ -202,14 +202,93 @@ const NavBar: React.FC = () => {
                         borderRadius: 1,
                         transition: "all 0.2s ease",
                         "&:hover": {
-                          backgroundColor: "rgba(25, 118, 210, 0.08)",
-                          color: "rgb(23, 131, 239)",
+                          backgroundColor: "rgba(37, 150, 190, 0.08)",
+                          color: "rgba(37, 150, 190)",
                         },
                       }}
                     >
                       Experiments
                     </MuiLink>
                   )}
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <IconButton
+                    onClick={handleProfileMenuOpen}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 0.5,
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: 2,
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        backgroundColor: "rgba(37, 150, 190, 0.08)",
+                      },
+                    }}
+                  >
+                    <UserCircle size={20} color="#666" />
+                    <ChevronDown size={14} color="#666" />
+                  </IconButton>
+
+                  <Menu
+                    anchorEl={profileAnchorEl}
+                    open={Boolean(profileAnchorEl)}
+                    onClose={handleProfileMenuClose}
+                    disableScrollLock={true}
+                    PaperProps={{
+                      elevation: 8,
+                      sx: {
+                        mt: 1,
+                        minWidth: 200,
+                        borderRadius: 2,
+                        border: "1px solid rgba(0, 0, 0, 0.1)",
+                      },
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem 
+                      sx={{
+                        pointerEvents: "none",
+                        "&:hover": {
+                          backgroundColor: "transparent",
+                        },
+                      }}
+                    >
+                      <ListItemIcon>
+                        <UserCircle size={20} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={userProfile?.name || "User"}
+                        secondary={userProfile?.email || ""}
+                        primaryTypographyProps={{
+                          fontWeight: 600,
+                          fontSize: "0.8rem",
+                          color: "#222",
+                        }}
+                        secondaryTypographyProps={{ 
+                          fontSize: "0.8rem",
+                          color: "#444",
+                        }}
+                      />
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem
+                      onClick={logout}
+                      sx={{
+                        fontSize: "0.8rem",
+                        "& .MuiListItemText-primary": {
+                          fontSize: "0.8rem",
+                        },
+                      }}
+                    >
+                      <ListItemIcon>
+                        <LogOut size={20} />
+                      </ListItemIcon>
+                      <ListItemText primary="Logout" />
+                    </MenuItem>
+                  </Menu>
+                </Box>
               </>
             ) : (
               <MuiLink
@@ -224,22 +303,22 @@ const NavBar: React.FC = () => {
                   py: 0.75,
                   borderRadius: 3,
                   background:
-                    "linear-gradient(135deg, rgb(23, 131, 239) 0%, rgba(66, 165, 245, 0.9) 100%)",
-                  boxShadow: "0 4px 15px rgba(23, 131, 239, 0.3)",
+                    "linear-gradient(135deg, rgba(37, 150, 190) 0%, rgba(45, 170, 210, 0.9) 100%)",
+                  boxShadow: "0 4px 15px rgba(37, 150, 190, 0.3)",
                   border: "1px solid rgba(255, 255, 255, 0.2)",
                   backdropFilter: "blur(10px)",
                   transition: "all 0.3s ease",
                   textShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
                   "&:hover": {
                     background:
-                      "linear-gradient(135deg, rgba(23, 131, 239, 0.9) 0%, rgba(66, 165, 245, 0.8) 100%)",
-                    boxShadow: "0 6px 20px rgba(23, 131, 239, 0.4)",
+                      "linear-gradient(135deg, rgba(37, 150, 190, 0.9) 0%, rgba(45, 170, 210, 0.8) 100%)",
+                    boxShadow: "0 6px 20px rgba(37, 150, 190, 0.4)",
                     transform: "translateY(-2px)",
                     borderColor: "rgba(255, 255, 255, 0.3)",
                   },
                   "&:active": {
                     transform: "translateY(0px)",
-                    boxShadow: "0 2px 10px rgba(23, 131, 239, 0.3)",
+                    boxShadow: "0 2px 10px rgba(37, 150, 190, 0.3)",
                   },
                 }}
               >
@@ -247,76 +326,6 @@ const NavBar: React.FC = () => {
               </MuiLink>
             )}
           </Box>
-
-          {isAuthenticated && (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <IconButton
-                onClick={handleProfileMenuOpen}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 2,
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    backgroundColor: "rgba(25, 118, 210, 0.08)",
-                  },
-                }}
-              >
-                <UserCircle size={20} color="#666" />
-                <ChevronDown size={14} color="#666" />
-              </IconButton>
-
-              <Menu
-                anchorEl={profileAnchorEl}
-                open={Boolean(profileAnchorEl)}
-                onClose={handleProfileMenuClose}
-                PaperProps={{
-                  elevation: 8,
-                  sx: {
-                    mt: 1,
-                    minWidth: 200,
-                    borderRadius: 2,
-                    border: "1px solid rgba(0, 0, 0, 0.1)",
-                  },
-                }}
-                transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-              >
-                <MenuItem disabled>
-                  <ListItemIcon>
-                    <UserCircle size={20} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={userProfile?.name || "User"}
-                    secondary={userProfile?.email || ""}
-                    primaryTypographyProps={{
-                      fontWeight: 600,
-                      fontSize: "0.8rem",
-                    }}
-                    secondaryTypographyProps={{ fontSize: "0.8rem" }}
-                  />
-                </MenuItem>
-                <Divider />
-                <MenuItem
-                  onClick={logout}
-                  sx={{
-                    fontSize: "0.8rem",
-                    "& .MuiListItemText-primary": {
-                      fontSize: "0.8rem",
-                    },
-                  }}
-                >
-                  <ListItemIcon>
-                    <LogOut size={20} />
-                  </ListItemIcon>
-                  <ListItemText primary="Logout" />
-                </MenuItem>
-              </Menu>
-            </Box>
-          )}
         </Toolbar>
         {error && (
           <Box

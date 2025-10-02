@@ -10,6 +10,7 @@ export const Header = () => {
         display: "flex",
         flexDirection: "column",
         gap: 1.5,
+        mt: 5,
       }}
     >
       <HeartRate />
@@ -18,7 +19,7 @@ export const Header = () => {
         <span
           style={{
             background:
-              "linear-gradient(135deg, rgb(23, 131, 239), rgba(66, 165, 245, 0.9))",
+              "linear-gradient(135deg, rgba(37, 150, 190), rgba(37, 150, 190, 0.9))",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",

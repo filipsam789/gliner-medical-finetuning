@@ -85,7 +85,7 @@ const SubscriptionsPage: React.FC = () => {
       sx={{
         minHeight: "100vh",
         background:
-          "linear-gradient(135deg,rgb(72, 163, 255) 0%,rgb(119, 194, 255) 100%)",
+          "linear-gradient(180deg, hsl(0 0% 98%), hsl(240 4.8% 95.9%))",
         backgroundAttachment: "fixed",
         py: 9,
       }}
@@ -95,10 +95,12 @@ const SubscriptionsPage: React.FC = () => {
           <Typography
             variant="h2"
             sx={{
-              color: "white",
+              color: "primary.main",
               fontWeight: 700,
               mb: 2,
-              textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+              mt: 7,
+              fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+              textShadow: "2px 2px 4px rgba(0,0,0,0.2)",
             }}
           >
             Choose Your Plan
@@ -106,10 +108,12 @@ const SubscriptionsPage: React.FC = () => {
           <Typography
             variant="h6"
             sx={{
-              color: "rgba(255, 255, 255, 0.9)",
+              color: "text.secondary",
               fontWeight: 400,
               maxWidth: 600,
               mx: "auto",
+              fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+              textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
             }}
           >
             Unlock the full potential of GLiNER Medical with our flexible
@@ -156,8 +160,9 @@ const SubscriptionsPage: React.FC = () => {
                   variant="h4"
                   sx={{
                     fontWeight: 700,
-                    color: "rgb(23, 131, 239)",
+                    color: "rgba(37, 150, 190)",
                     my: 1,
+                    fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
                   }}
                 >
                   Free
@@ -170,12 +175,22 @@ const SubscriptionsPage: React.FC = () => {
                   <Typography
                     component="span"
                     variant="h5"
-                    sx={{ color: "text.secondary", ml: 0.5 }}
+                    sx={{ 
+                      color: "text.secondary", 
+                      ml: 0.5,
+                      fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                    }}
                   >
                     /month
                   </Typography>
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography 
+                  variant="body2" 
+                  color="text.secondary"
+                  sx={{
+                    fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                  }}
+                >
                   Perfect for getting started
                 </Typography>
               </Box>
@@ -193,23 +208,33 @@ const SubscriptionsPage: React.FC = () => {
                         width: 20,
                         height: 20,
                         borderRadius: "50%",
-                        backgroundColor: "rgba(25, 118, 210, 0.1)",
+                        backgroundColor: "rgba(37, 150, 190, 0.1)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         flexShrink: 0,
                       }}
                     >
-                      <Check size={12} color="rgb(23, 131, 239)" />
+                      <Check size={12} color="rgba(37, 150, 190)" />
                     </Box>
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 500, mb: 0.5 }}
+                        sx={{ 
+                          fontWeight: 500, 
+                          mb: 0.5,
+                          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                        }}
                       >
                         {f.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography 
+                        variant="body2" 
+                        color="text.secondary"
+                        sx={{
+                          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                        }}
+                      >
                         {f.free}
                       </Typography>
                     </Box>
@@ -221,13 +246,13 @@ const SubscriptionsPage: React.FC = () => {
                 <Button
                   variant="outlined"
                   sx={{
-                    borderColor: "rgb(23, 131, 239)",
-                    color: "rgb(23, 131, 239)",
+                    borderColor: "rgba(37, 150, 190)",
+                    color: "rgba(37, 150, 190)",
                     fontWeight: 600,
                     py: 1.5,
                     "&:hover": {
-                      backgroundColor: "rgba(23, 131, 239, 0.08)",
-                      borderColor: "rgb(23, 131, 239)",
+                      backgroundColor: "rgba(37, 150, 190, 0.08)",
+                      borderColor: "rgba(37, 150, 190)",
                     },
                   }}
                   fullWidth
@@ -239,8 +264,8 @@ const SubscriptionsPage: React.FC = () => {
                 <Button
                   variant="outlined"
                   sx={{
-                    borderColor: "rgb(23, 131, 239)",
-                    color: "rgb(23, 131, 239)",
+                    borderColor: "rgba(37, 150, 190)",
+                    color: "rgba(37, 150, 190)",
                     fontWeight: 600,
                     py: 1.5,
                   }}
@@ -272,16 +297,16 @@ const SubscriptionsPage: React.FC = () => {
               width: 320,
               height: 600,
               background:
-                "linear-gradient(135deg, rgba(23, 131, 239, 0.95) 0%, rgba(66, 165, 245, 0.95) 100%)",
+                "linear-gradient(135deg, rgba(37, 150, 190, 0.95) 0%, rgba(45, 170, 210, 0.95) 100%)",
               backdropFilter: "blur(10px)",
               borderRadius: 4,
-              boxShadow: "0 20px 40px rgba(23, 131, 239, 0.3)",
+              boxShadow: "0 20px 40px rgba(37, 150, 190, 0.3)",
               border: "1px solid rgba(255, 255, 255, 0.2)",
               position: "relative",
               overflow: "hidden",
               "&:hover": {
                 transform: "translateY(-8px)",
-                boxShadow: "0 30px 60px rgba(23, 131, 239, 0.4)",
+                boxShadow: "0 30px 60px rgba(37, 150, 190, 0.4)",
               },
               transition: "all 0.3s ease",
             }}
@@ -319,6 +344,7 @@ const SubscriptionsPage: React.FC = () => {
                     fontWeight: 700,
                     color: "white",
                     my: 1,
+                    fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
                   }}
                 >
                   Premium
@@ -331,14 +357,21 @@ const SubscriptionsPage: React.FC = () => {
                   <Typography
                     component="span"
                     variant="h5"
-                    sx={{ color: "rgba(255, 255, 255, 0.8)", ml: 0.5 }}
+                    sx={{ 
+                      color: "rgba(255, 255, 255, 0.8)", 
+                      ml: 0.5,
+                      fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                    }}
                   >
                     /month
                   </Typography>
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: "rgba(255, 255, 255, 0.9)" }}
+                  sx={{ 
+                    color: "rgba(255, 255, 255, 0.9)",
+                    fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                  }}
                 >
                   Everything you need for professional use
                 </Typography>
@@ -371,13 +404,21 @@ const SubscriptionsPage: React.FC = () => {
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography
                         variant="body2"
-                        sx={{ fontWeight: 500, mb: 0.5, color: "white" }}
+                        sx={{ 
+                          fontWeight: 500, 
+                          mb: 0.5, 
+                          color: "white",
+                          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                        }}
                       >
                         {f.name}
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                        sx={{ 
+                          color: "rgba(255, 255, 255, 0.8)",
+                          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                        }}
                       >
                         {f.premium}
                       </Typography>
@@ -391,7 +432,7 @@ const SubscriptionsPage: React.FC = () => {
                   variant="contained"
                   sx={{
                     backgroundColor: "white",
-                    color: "rgb(23, 131, 239)",
+                    color: "rgba(37, 150, 190)",
                     fontWeight: 600,
                     py: 1.5,
                     "&:hover": {
@@ -428,7 +469,7 @@ const SubscriptionsPage: React.FC = () => {
                   variant="contained"
                   sx={{
                     backgroundColor: "white",
-                    color: "rgb(23, 131, 239)",
+                    color: "rgba(37, 150, 190)",
                     fontWeight: 600,
                     py: 1.5,
                     "&:hover": {

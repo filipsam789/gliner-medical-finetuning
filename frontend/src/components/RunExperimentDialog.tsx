@@ -96,7 +96,7 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
       maxWidth="sm"
       sx={{ backdropFilter: "blur(4px)" }}
     >
-      <DialogTitle>Run Experiment</DialogTitle>
+      <DialogTitle sx={{ textAlign: "center" }}>Run Experiment</DialogTitle>
       <DialogContent>
         {(!success && !error && !running) || validationError ? (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 1 }}>
@@ -113,28 +113,28 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
                   displayEmpty
                   sx={{
                     "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "rgb(23, 131, 239)",
+                      borderColor: "rgba(37, 150, 190)",
                     },
                     "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "rgb(23, 131, 239)",
+                      borderColor: "rgba(37, 150, 190)",
                     },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "rgb(23, 131, 239)",
+                      borderColor: "rgba(37, 150, 190)",
                     },
                     "& .MuiSelect-icon": {
-                      color: "rgb(23, 131, 239)",
+                      color: "rgba(37, 150, 190)",
                     },
                     "& .MuiMenuItem-root.Mui-selected": {
-                      backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                      backgroundColor: "rgba(37, 150, 190, 0.1) !important",
                       "&:hover": {
-                        backgroundColor: "rgba(23, 131, 239, 0.2) !important",
+                        backgroundColor: "rgba(37, 150, 190, 0.2) !important",
                       },
                     },
                     "& .MuiMenuItem-root:hover": {
-                      backgroundColor: "rgba(23, 131, 239, 0.08)",
+                      backgroundColor: "rgba(37, 150, 190, 0.08)",
                     },
                     "& .MuiMenuItem-root.Mui-selected.MuiButtonBase-root": {
-                      backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                      backgroundColor: "rgba(37, 150, 190, 0.1) !important",
                     },
                   }}
                 >
@@ -283,7 +283,7 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
               py: 4,
             }}
           >
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, color: "text.secondary" }}>
               Running experiment...
             </Typography>
             <Box

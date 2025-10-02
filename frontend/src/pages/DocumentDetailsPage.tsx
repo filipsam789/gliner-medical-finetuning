@@ -26,6 +26,17 @@ import { EntitySummary } from "@/components/EntitySummary";
 import { EntityList } from "@/components/EntityList";
 import { RepresentationResults } from "@/types";
 
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
 const DocumentDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { token } = useKeycloakAuth();
@@ -198,14 +209,14 @@ const DocumentDetailsPage: React.FC = () => {
       }}
     >
       {experimentRuns.length > 0 && (
-        <Box sx={{ width: "100%", maxWidth: 700, mb: 3 }}>
+        <Box sx={{ width: "100%", maxWidth: 900, mb: 3 }}>
           <FormControl fullWidth>
             <InputLabel
               id="experiment-runs-select-label"
               sx={{
-                color: "rgb(23, 131, 239)",
+                color: "rgba(37, 150, 190)",
                 "&.Mui-focused": {
-                  color: "rgb(23, 131, 239)",
+                  color: "rgba(37, 150, 190)",
                 },
               }}
             >
@@ -218,28 +229,28 @@ const DocumentDetailsPage: React.FC = () => {
               onChange={(e) => handleRunChange(e.target.value)}
               sx={{
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgb(23, 131, 239)",
+                  borderColor: "rgba(37, 150, 190)",
                 },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgb(23, 131, 239)",
+                  borderColor: "rgba(37, 150, 190)",
                 },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "rgb(23, 131, 239)",
+                  borderColor: "rgba(37, 150, 190)",
                 },
                 "& .MuiSelect-icon": {
-                  color: "rgb(23, 131, 239)",
+                  color: "rgba(37, 150, 190)",
                 },
                 "& .MuiMenuItem-root.Mui-selected": {
-                  backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                  backgroundColor: "rgba(37, 150, 190, 0.1) !important",
                   "&:hover": {
-                    backgroundColor: "rgba(23, 131, 239, 0.2) !important",
+                    backgroundColor: "rgba(37, 150, 190, 0.2) !important",
                   },
                 },
                 "& .MuiMenuItem-root:hover": {
-                  backgroundColor: "rgba(23, 131, 239, 0.08)",
+                  backgroundColor: "rgba(37, 150, 190, 0.08)",
                 },
                 "& .MuiMenuItem-root.Mui-selected.MuiButtonBase-root": {
-                  backgroundColor: "rgba(23, 131, 239, 0.1) !important",
+                  backgroundColor: "rgba(37, 150, 190, 0.1) !important",
                 },
               }}
             >
@@ -254,7 +265,7 @@ const DocumentDetailsPage: React.FC = () => {
       )}
 
       <Card
-        sx={{ maxWidth: 700, width: "100%", mx: "auto", boxShadow: 4, p: 3 }}
+        sx={{ maxWidth: 900, width: "100%", mx: "auto", boxShadow: 4, p: 3 }}
       >
         <CardMedia
           component="img"
@@ -271,7 +282,7 @@ const DocumentDetailsPage: React.FC = () => {
             {document.title}
           </Typography>
           <Typography variant="subtitle2" color="textSecondary" sx={{ mb: 2 }}>
-            {document.date_added}
+            Date added: {formatDate(document.date_added)}
           </Typography>
           <Box
             sx={{
@@ -295,7 +306,7 @@ const DocumentDetailsPage: React.FC = () => {
       </Card>
 
       {selectedRun && results && (
-        <Box sx={{ width: "100%", maxWidth: 700, mt: 3 }}>
+        <Box sx={{ width: "100%", maxWidth: 900, mt: 3 }}>
           {resultsLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
               <CircularProgress />

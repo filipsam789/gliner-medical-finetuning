@@ -59,11 +59,11 @@ const SubscriptionSuccessPage: React.FC = () => {
           justifyContent: "center",
           minHeight: "100vh",
           background:
-            "linear-gradient(135deg,rgb(72, 163, 255) 0%,rgb(119, 194, 255) 100%)",
+            "linear-gradient(180deg, hsl(0 0% 98%), hsl(240 4.8% 95.9%))",
         }}
       >
-        <CircularProgress size={60} sx={{ color: "white", mb: 2 }} />
-        <Typography variant="h6" sx={{ color: "white" }}>
+        <CircularProgress size={60} sx={{ color: "primary.main", mb: 2 }} />
+        <Typography variant="h6" sx={{ color: "text.primary" }}>
           Verifying your payment...
         </Typography>
       </Box>
@@ -80,7 +80,7 @@ const SubscriptionSuccessPage: React.FC = () => {
           justifyContent: "center",
           minHeight: "100vh",
           background:
-            "linear-gradient(135deg,rgb(72, 163, 255) 0%,rgb(119, 194, 255) 100%)",
+            "linear-gradient(180deg, hsl(0 0% 98%), hsl(240 4.8% 95.9%))",
           p: 4,
         }}
       >
@@ -91,10 +91,9 @@ const SubscriptionSuccessPage: React.FC = () => {
           variant="contained"
           onClick={() => navigate("/subscriptions")}
           sx={{
-            backgroundColor: "white",
-            color: "rgb(23, 131, 239)",
+            backgroundColor: "primary.main",
             "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              backgroundColor: "primary.dark",
             },
           }}
         >
@@ -113,7 +112,7 @@ const SubscriptionSuccessPage: React.FC = () => {
         justifyContent: "center",
         minHeight: "100vh",
         background:
-          "linear-gradient(135deg,rgb(72, 163, 255) 0%,rgb(119, 194, 255) 100%)",
+          "linear-gradient(180deg, hsl(0 0% 98%), hsl(240 4.8% 95.9%))",
         p: 4,
       }}
     >
@@ -164,9 +163,9 @@ const SubscriptionSuccessPage: React.FC = () => {
           variant="contained"
           onClick={() => navigate("/experiments")}
           sx={{
-            backgroundColor: "rgb(23, 131, 239)",
+            backgroundColor: "primary.main",
             "&:hover": {
-              backgroundColor: "rgb(21, 118, 215)",
+              backgroundColor: "primary.dark",
             },
           }}
         >

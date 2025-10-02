@@ -120,6 +120,7 @@ const ExperimentDetailsPage: React.FC = () => {
               setConfirmOpen(true);
             }}
             navigate={navigate}
+            experimentName={experiment?.name}
           />
         )}
       </Box>

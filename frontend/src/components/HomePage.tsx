@@ -9,7 +9,7 @@ import {
   Container,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Heart, Stethoscope, Activity, Calendar, Clock } from "lucide-react";
+import { Heart, Stethoscope, Activity, Calendar, Pencil, Users } from "lucide-react";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -47,22 +47,22 @@ const HomePage: React.FC = () => {
     >
       <Container
         maxWidth="lg"
-        sx={{ position: "relative", zIndex: 2, pt: 12, pb: 8 }}
+        sx={{ position: "relative", zIndex: 2, pt: 25, pb: 8 }}
       >
         <Box sx={{ display: "flex", alignItems: "center", minHeight: "60vh" }}>
-          <Box sx={{ maxWidth: "600px", mb: 4 }}>
+          <Box sx={{ maxWidth: "700px", mb: 4 }}>
             <Typography
               variant="h2"
               component="h1"
               sx={{
                 fontWeight: 600,
                 color: "white",
-                textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+                textShadow: "3px 3px 4px rgba(0, 0, 0, 0.4)",
                 mb: 2,
-                fontSize: { xs: "2.5rem", md: "3.5rem" },
+                fontSize: { xs: "3rem", md: "3.8rem" },
               }}
             >
-              Professional Medical AI
+              Empowering Healthcare with Advanced AI Extraction
             </Typography>
             <Typography
               variant="h5"
@@ -73,7 +73,7 @@ const HomePage: React.FC = () => {
                 fontWeight: 400,
               }}
             >
-              CREATE YOUR MEDICAL WEBSITE USING GLiNER MEDICAL
+              Unlock clinical insights, automate documentation, and streamline medical research—powered by various models.
             </Typography>
 
             <Stack direction="row" spacing={3} sx={{ mb: 4 }}>
@@ -82,11 +82,11 @@ const HomePage: React.FC = () => {
                   width: 60,
                   height: 60,
                   borderRadius: "50%",
-                  backgroundColor: "rgba(25, 118, 210, 0.2)",
+                  backgroundColor: "rgba(22, 150, 170, 0.2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  border: "2px solid rgba(25, 118, 210, 0.5)",
+                  border: "2px solid rgba(49, 164, 201)",
                 }}
               >
                 <Heart size={24} color="white" />
@@ -96,11 +96,11 @@ const HomePage: React.FC = () => {
                   width: 60,
                   height: 60,
                   borderRadius: "50%",
-                  backgroundColor: "rgba(25, 118, 210, 0.2)",
+                  backgroundColor: "rgba(22, 150, 170, 0.2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  border: "2px solid rgba(25, 118, 210, 0.5)",
+                  border: "2px solid rgba(49, 164, 201)",
                 }}
               >
                 <Stethoscope size={24} color="white" />
@@ -110,11 +110,11 @@ const HomePage: React.FC = () => {
                   width: 60,
                   height: 60,
                   borderRadius: "50%",
-                  backgroundColor: "rgba(25, 118, 210, 0.2)",
+                  backgroundColor: "rgba(22, 150, 170, 0.2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  border: "2px solid rgba(25, 118, 210, 0.5)",
+                  border: "2px solid rgba(49, 164, 201)",
                 }}
               >
                 <Activity size={24} color="white" />
@@ -131,7 +131,7 @@ const HomePage: React.FC = () => {
                 size="large"
                 onClick={handleGetStarted}
                 sx={{
-                  backgroundColor: "rgb(23, 131, 239)",
+                  backgroundColor: "rgba(37, 150, 190)",
                   color: "white",
                   px: 4,
                   py: 1.5,
@@ -140,9 +140,9 @@ const HomePage: React.FC = () => {
                   borderRadius: 2,
                   textTransform: "none",
                   backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  border: "1px solid rgba(255, 255, 255, 0.16)",
                   "&:hover": {
-                    backgroundColor: "rgba(25, 118, 210, 0.3)",
+                    backgroundColor: "rgba(45, 170, 210, 0.3)",
                     transform: "translateY(-2px)",
                     backdropFilter: "blur(15px)",
                     boxShadow: "0 8px 32px rgba(25, 118, 210, 0.2)",
@@ -196,7 +196,7 @@ const HomePage: React.FC = () => {
               <Card
                 sx={{
                   background:
-                    "linear-gradient(135deg, rgba(25, 118, 210, 0.8) 0%, rgba(66, 165, 245, 0.8) 100%)",
+                    "linear-gradient(135deg, rgba(37, 150, 190, 0.8) 0%, rgba(45, 170, 210, 0.8) 100%)",
                   color: "white",
                   borderRadius: 3,
                   height: "100%",
@@ -220,17 +220,11 @@ const HomePage: React.FC = () => {
                     flexDirection: "column",
                   }}
                 >
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontWeight: 700,
-                      mb: 1,
-                      color: "white",
-                      textAlign: "center",
-                    }}
+                  <Box
+                    sx={{ display: "flex", justifyContent: "center", mb: 2 }}
                   >
-                    1-800-600-380
-                  </Typography>
+                    <Pencil size={48} color="white" />
+                  </Box>
                   <Typography
                     variant="h6"
                     sx={{
@@ -242,7 +236,7 @@ const HomePage: React.FC = () => {
                       textAlign: "center",
                     }}
                   >
-                    Emergency Service
+                    Have a Feature Request?
                   </Typography>
                   <Typography
                     variant="body1"
@@ -253,15 +247,13 @@ const HomePage: React.FC = () => {
                       textAlign: "center",
                     }}
                   >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Help us improve GLiNER Medical by sharing your feature ideas and suggestions. We value input from our users and continuously enhance the platform based on your feedback.
                   </Typography>
                   <Button
                     variant="contained"
                     sx={{
                       backgroundColor: "white",
-                      color: "primary.main",
+                      color: "rgba(37, 150, 190, 1)",
                       fontWeight: 600,
                       borderRadius: 2,
                       textTransform: "none",
@@ -273,7 +265,7 @@ const HomePage: React.FC = () => {
                       transition: "all 0.3s ease",
                     }}
                   >
-                    See More
+                    Submit Request
                   </Button>
                 </CardContent>
               </Card>
@@ -283,7 +275,7 @@ const HomePage: React.FC = () => {
               <Card
                 sx={{
                   background:
-                    "linear-gradient(135deg, rgba(25, 118, 210, 0.8) 0%, rgba(66, 165, 245, 0.8) 100%)",
+                    "linear-gradient(135deg, rgba(37, 150, 190, 0.8) 0%, rgba(45, 170, 210, 0.8) 100%)",
                   color: "white",
                   borderRadius: 3,
                   height: "100%",
@@ -323,7 +315,7 @@ const HomePage: React.FC = () => {
                       textAlign: "center",
                     }}
                   >
-                    Do You Want To Make An Appointment
+                    Get a Guided Demo or Start Processing
                   </Typography>
                   <Typography
                     variant="body1"
@@ -334,15 +326,13 @@ const HomePage: React.FC = () => {
                       textAlign: "center",
                     }}
                   >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Schedule a walkthrough to see how GLiNER Medical can accelerate your clinical or research workflow with AI-powered medical entity extraction and smart document analysis.
                   </Typography>
                   <Button
                     variant="contained"
                     sx={{
                       backgroundColor: "white",
-                      color: "primary.main",
+                      color: "rgba(37, 150, 190, 1)",
                       fontWeight: 600,
                       borderRadius: 2,
                       textTransform: "none",
@@ -364,7 +354,7 @@ const HomePage: React.FC = () => {
               <Card
                 sx={{
                   background:
-                    "linear-gradient(135deg, rgba(25, 118, 210, 0.8) 0%, rgba(66, 165, 245, 0.8) 100%)",
+                    "linear-gradient(135deg, rgba(37, 150, 190, 0.8) 0%, rgba(45, 170, 210, 0.8) 100%)",
                   color: "white",
                   borderRadius: 3,
                   height: "100%",
@@ -391,7 +381,7 @@ const HomePage: React.FC = () => {
                   <Box
                     sx={{ display: "flex", justifyContent: "center", mb: 2 }}
                   >
-                    <Clock size={48} color="white" />
+                    <Users size={48} color="white" />
                   </Box>
                   <Typography
                     variant="h6"
@@ -404,7 +394,7 @@ const HomePage: React.FC = () => {
                       textAlign: "center",
                     }}
                   >
-                    Opening Hours
+                    Need Support or Assistance?
                   </Typography>
                   <Box sx={{ mb: 3, flexGrow: 1, textAlign: "center" }}>
                     <Typography
@@ -412,26 +402,16 @@ const HomePage: React.FC = () => {
                       sx={{
                         color: "rgba(255, 255, 255, 0.9)",
                         mb: 1,
-                        fontWeight: 500,
                       }}
                     >
-                      Monday - Friday: 8:00 AM - 6:00 PM
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: "rgba(255, 255, 255, 0.9)",
-                        fontWeight: 500,
-                      }}
-                    >
-                      Saturday - Sunday: 9:00 AM - 4:00 PM
+                      Our support team is ready to help you with any technical issues, integration questions, or account management needs. For urgent requests or onboarding help, please use our contact form or email support@gliner-medical.com.
                     </Typography>
                   </Box>
                   <Button
                     variant="contained"
                     sx={{
                       backgroundColor: "white",
-                      color: "primary.main",
+                      color: "rgba(37, 150, 190, 1)",
                       fontWeight: 600,
                       borderRadius: 2,
                       textTransform: "none",

@@ -4,7 +4,7 @@ export const mainTheme = createTheme({
   cssVariables: true,
   palette: {
     primary: {
-      main: "rgb(23, 131, 239)",
+      main: "rgba(37, 150, 190)",
       contrastText: "hsl(0, 0%, 98%)",
     },
     secondary: {
@@ -73,11 +73,11 @@ export const mainTheme = createTheme({
               borderColor: "hsl(240, 5.9%, 90%)",
             },
             "&:hover fieldset": {
-              borderColor: "rgb(23, 131, 239)",
+              borderColor: "rgba(37, 150, 190)",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "rgb(23, 131, 239)",
-              boxShadow: "0 0 0 2px rgba(23, 131, 239, 0.15)",
+              borderColor: "rgba(37, 150, 190)",
+              boxShadow: "0 0 0 2px rgba(37, 150, 190, 0.15)",
             },
             "& input::placeholder, & textarea::placeholder": {
               fontSize: "1rem",
@@ -112,12 +112,12 @@ export const mainTheme = createTheme({
         },
         containedPrimary: {
           background:
-            "linear-gradient(135deg, rgb(23, 131, 239), rgba(66, 165, 245, 0.9))",
+            "linear-gradient(135deg, rgba(37, 150, 190), rgba(45, 170, 210, 0.9))",
           boxShadow: "none",
           "&:hover": {
             background:
-              "linear-gradient(135deg, rgba(25, 118, 210, 0.9), rgba(66, 165, 245, 1))",
-            boxShadow: "0 0 40px rgba(23, 131, 239, 0.15)",
+              "linear-gradient(135deg, rgba(37, 150, 190, 0.9), rgba(45, 170, 210, 1))",
+            boxShadow: "0 0 40px rgba(37, 150, 190, 0.15)",
             transform: "scale(1.02)",
           },
           "&:disabled": {
@@ -136,10 +136,10 @@ export const mainTheme = createTheme({
               borderColor: "hsl(240, 5.9%, 90%)",
             },
             "&:hover fieldset": {
-              borderColor: "rgb(23, 131, 239)",
+              borderColor: "rgba(37, 150, 190)",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "rgb(23, 131, 239)",
+              borderColor: "rgba(37, 150, 190)",
             },
           },
         },
@@ -148,9 +148,9 @@ export const mainTheme = createTheme({
     MuiCheckbox: {
       styleOverrides: {
         root: {
-          color: "rgb(23, 131, 239)",
+          color: "rgba(37, 150, 190)",
           "&.Mui-checked": {
-            color: "rgb(23, 131, 239)",
+            color: "rgba(37, 150, 190)",
           },
         },
       },

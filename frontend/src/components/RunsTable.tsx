@@ -39,25 +39,35 @@ const RunsTable: React.FC<RunsTableProps> = ({ runs }) => {
   );
 
   return (
-    <Box sx={{ mb: 3 }}>
-      <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-        History of Runs
-      </Typography>
+    <Box sx={{ mb: 3, mt: 3 }}>
+      <Box sx={{ textAlign: "center", mb: 4 }}>
+        <Typography 
+          variant="h4" 
+          gutterBottom 
+          sx={{ 
+            fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+            color: "primary.main",
+            mb: 3
+          }}
+        >
+          History of Runs
+        </Typography>
+      </Box>
 
       <TableContainer component={Paper} sx={{ boxShadow: 2, borderRadius: 2 }}>
         <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f8f9fa" }}>
-              <TableCell sx={{ fontWeight: 600, color: "text.primary" }}>
+              <TableCell sx={{ fontWeight: 600, color: "text.primary", textAlign: "center" }}>
                 Date Ran
               </TableCell>
-              <TableCell sx={{ fontWeight: 600, color: "text.primary" }}>
+              <TableCell sx={{ fontWeight: 600, color: "text.primary", textAlign: "center" }}>
                 Model
               </TableCell>
-              <TableCell sx={{ fontWeight: 600, color: "text.primary" }}>
+              <TableCell sx={{ fontWeight: 600, color: "text.primary", textAlign: "center" }}>
                 Threshold
               </TableCell>
-              <TableCell sx={{ fontWeight: 600, color: "text.primary" }}>
+              <TableCell sx={{ fontWeight: 600, color: "text.primary", textAlign: "center" }}>
                 Labels to Extract
               </TableCell>
               <TableCell
@@ -83,26 +93,26 @@ const RunsTable: React.FC<RunsTableProps> = ({ runs }) => {
                     },
                   }}
                 >
-                  <TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
                     {new Date(run.date_ran).toLocaleString()}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
                     <Chip
                       label={run.model}
                       size="small"
                       sx={{
-                        backgroundColor: "rgba(23, 131, 239, 0.1)",
-                        color: "rgb(23, 131, 239)",
+                        backgroundColor: "rgba(37, 150, 190, 0.1)",
+                        color: "rgba(37, 150, 190)",
                         fontWeight: 500,
                       }}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
                     {run.threshold !== undefined && run.threshold !== null
                       ? run.threshold
                       : "-"}
                   </TableCell>
-                  <TableCell sx={{ maxWidth: 200, wordBreak: "break-word" }}>
+                  <TableCell sx={{ maxWidth: 200, wordBreak: "break-word", textAlign: "center" }}>
                     {run.labels_to_extract}
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>

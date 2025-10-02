@@ -101,62 +101,81 @@ const ExperimentsPage: React.FC = () => {
 
   return (
     <Box sx={{ p: 4, pt: 10 }}>
-      <Typography variant="h4" gutterBottom>
-        Experiments
-      </Typography>
-      <Button
-        variant="contained"
-        startIcon={<Plus />}
-        sx={{ mb: 3, float: "right" }}
-        onClick={() => setOpen(true)}
-      >
-        Add experiment
-      </Button>
-      <Box sx={{ clear: "both" }} />
+      <Box sx={{ textAlign: "center", mb: 4 }}>
+        <Typography 
+          variant="h4" 
+          gutterBottom 
+          sx={{ 
+            mt: 4,
+            fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+            color: "primary.main",
+            mb: 3
+          }}
+        >
+          Experiments
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<Plus />}
+          onClick={() => setOpen(true)}
+        >
+          Add experiment
+        </Button>
+      </Box>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError("")}>
           {error}
         </Alert>
       )}
-      <Stack direction="row" spacing={3} flexWrap="wrap">
+      <Box 
+        sx={{ 
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 3,
+          justifyContent: "center",
+          alignItems: "flex-start",
+          maxWidth: "1200px",
+          mx: "auto"
+        }}
+      >
         {experiments.map((exp) => (
           <Card
             key={exp.id}
-            sx={{ width: 220, mb: 2, position: "relative", cursor: "pointer" }}
+            sx={{ width: 280, position: "relative", cursor: "pointer" }}
             onClick={() => navigate(`/experiments/${exp.id}`)}
           >
             <CardMedia
               component="img"
-              height="140"
+              height="180"
               image={exp.image_url}
               alt={exp.name}
               sx={{ objectFit: "cover" }}
             />
-            <CardContent>
+            <CardContent sx={{ position: "relative" }}>
               <Typography variant="h6" noWrap>
                 {exp.name}
               </Typography>
+              <Button
+                sx={{
+                  position: "absolute",
+                  right: 8,
+                  top: 15,
+                  minWidth: 0,
+                  p: 1,
+                }}
+                color="error"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteId(exp.id);
+                  setConfirmOpen(true);
+                }}
+              >
+                <Trash2 size={20} />
+              </Button>
             </CardContent>
-            <Button
-              sx={{
-                position: "absolute",
-                right: 8,
-                bottom: 8,
-                minWidth: 0,
-                p: 1,
-              }}
-              color="error"
-              onClick={(e) => {
-                e.stopPropagation();
-                setDeleteId(exp.id);
-                setConfirmOpen(true);
-              }}
-            >
-              <Trash2 size={20} />
-            </Button>
           </Card>
         ))}
-      </Stack>
+      </Box>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Add Experiment</DialogTitle>
         <DialogContent>
