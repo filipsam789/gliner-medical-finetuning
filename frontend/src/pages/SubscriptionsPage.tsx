@@ -356,7 +356,7 @@ const SubscriptionsPage: React.FC = () => {
                   variant="h3"
                   sx={{ fontWeight: 800, color: "white", mb: 1 }}
                 >
-                  $29.99
+                  $19.99
                   <Typography
                     component="span"
                     variant="h5"
