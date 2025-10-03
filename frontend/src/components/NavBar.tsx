@@ -247,7 +247,7 @@ const NavBar: React.FC = () => {
                     transformOrigin={{ horizontal: "right", vertical: "top" }}
                     anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                   >
-                    <MenuItem 
+                    <MenuItem
                       sx={{
                         pointerEvents: "none",
                         "&:hover": {
@@ -266,7 +266,7 @@ const NavBar: React.FC = () => {
                           fontSize: "0.8rem",
                           color: "#222",
                         }}
-                        secondaryTypographyProps={{ 
+                        secondaryTypographyProps={{
                           fontSize: "0.8rem",
                           color: "#444",
                         }}

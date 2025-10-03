@@ -116,8 +116,8 @@ const SubscriptionsPage: React.FC = () => {
               textShadow: "1px 1px 2px rgba(0,0,0,0.1)",
             }}
           >
-            Unlock the full potential of GLiNER Medical with our flexible
-            pricing options
+            Unlock the full potential of MedLexica with our flexible pricing
+            options
           </Typography>
         </Box>
 

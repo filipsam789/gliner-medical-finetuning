@@ -9,7 +9,14 @@ import {
   Container,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Heart, Stethoscope, Activity, Calendar, Pencil, Users } from "lucide-react";
+import {
+  Heart,
+  Stethoscope,
+  Activity,
+  Calendar,
+  Pencil,
+  Users,
+} from "lucide-react";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -73,7 +80,8 @@ const HomePage: React.FC = () => {
                 fontWeight: 400,
               }}
             >
-              Unlock clinical insights, automate documentation, and streamline medical research—powered by various models.
+              Unlock clinical insights, automate documentation, and streamline
+              medical research—powered by various models.
             </Typography>
 
             <Stack direction="row" spacing={3} sx={{ mb: 4 }}>
@@ -247,7 +255,9 @@ const HomePage: React.FC = () => {
                       textAlign: "center",
                     }}
                   >
-                    Help us improve GLiNER Medical by sharing your feature ideas and suggestions. We value input from our users and continuously enhance the platform based on your feedback.
+                    Help us improve MedLexica by sharing your feature ideas and
+                    suggestions. We value input from our users and continuously
+                    enhance the platform based on your feedback.
                   </Typography>
                   <Button
                     variant="contained"
@@ -326,7 +336,9 @@ const HomePage: React.FC = () => {
                       textAlign: "center",
                     }}
                   >
-                    Schedule a walkthrough to see how GLiNER Medical can accelerate your clinical or research workflow with AI-powered medical entity extraction and smart document analysis.
+                    Schedule a walkthrough to see how MedLexica can accelerate
+                    your clinical or research workflow with AI-powered medical
+                    entity extraction and smart document analysis.
                   </Typography>
                   <Button
                     variant="contained"
@@ -404,7 +416,10 @@ const HomePage: React.FC = () => {
                         mb: 1,
                       }}
                     >
-                      Our support team is ready to help you with any technical issues, integration questions, or account management needs. For urgent requests or onboarding help, please use our contact form or email support@gliner-medical.com.
+                      Our support team is ready to help you with any technical
+                      issues, integration questions, or account management
+                      needs. For urgent requests or onboarding help, please use
+                      our contact form or email support@gliner-medical.com.
                     </Typography>
                   </Box>
                   <Button
