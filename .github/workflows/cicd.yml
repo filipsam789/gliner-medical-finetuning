@@ -45,6 +45,10 @@ jobs:
              VITE_KEYCLOAK_REALM=${{ secrets.VITE_KEYCLOAK_REALM }}
              VITE_KEYCLOAK_CLIENT_ID=${{ secrets.VITE_KEYCLOAK_CLIENT_ID }}
              VITE_APP_REDIRECT_URL=${{ secrets.VITE_APP_REDIRECT_URL }}
+       - name: Prune Docker and BuildX
+         run: |
+           docker builder prune -f
+           docker system prune -af
              
    deploy:
      name: Deploy to Azure VM
