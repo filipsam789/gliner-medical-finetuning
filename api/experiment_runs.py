@@ -48,7 +48,6 @@ async def add_experiment_run(experiment_id: int, data: dict, request: Request, u
     from documents import Document
     session = SessionLocal()
     docs = session.query(Document).filter(Document.experiment_id == experiment_id).all()
-    session.close()
     
     if not docs:
         raise HTTPException(status_code=400, detail="No documents found for this experiment")
