@@ -45,46 +45,57 @@ async def add_experiment_run(experiment_id: int, data: dict, request: Request, u
     threshold = data.get("threshold") or None
     if not model or labels_to_extract is None or allow_multilabeling is None:
         raise HTTPException(status_code=400, detail="Missing required fields")
-    session = SessionLocal()
-    run = ExperimentRun(
-        model=model,
-        labels_to_extract=labels_to_extract,
-        allow_multilabeling=allow_multilabeling,
-        threshold=threshold,
-        experiment_id=experiment_id,
-        date_ran=datetime.utcnow()
-    )
-    session.add(run)
-    session.commit()
-    session.refresh(run)
-    run_id = run.id
-    session.close()
-    session = SessionLocal()
     from documents import Document
     docs = session.query(Document).filter(Document.experiment_id == experiment_id).all()
     session.close()
+    
+    if not docs:
+        raise HTTPException(status_code=400, detail="No documents found for this experiment")
+    
     texts = [d.text for d in docs]
     doc_ids = [d.id for d in docs]
     doc_titles = [d.title for d in docs]
-    from helpers import predict_entities_batch, initialize_mongodb
-    predictions = await predict_entities_batch(model, labels_to_extract, texts, threshold, allow_multilabeling)
-    results = []
-    for doc_id, doc_title, preds in zip(doc_ids, doc_titles, predictions):
-        results.append({"predictions": preds, "document_id": doc_id, "document_title": doc_title})
-    mongo_client = initialize_mongodb()
-    mongo_client.database.ExperimentResults.insert_one({
-        "experiment_run_id": run_id,
-        "results": results
-    })
-    return {
-        "id": run_id,
-        "date_ran": run.date_ran,
-        "model": run.model,
-        "threshold": run.threshold,
-        "labels_to_extract": run.labels_to_extract,
-        "allow_multilabeling": run.allow_multilabeling,
-        "results": results
-    }
+    
+    try:
+        from helpers import predict_entities_batch, initialize_mongodb
+        predictions = await predict_entities_batch(model, labels_to_extract, texts, threshold, allow_multilabeling)
+        results = []
+        for doc_id, doc_title, preds in zip(doc_ids, doc_titles, predictions):
+            results.append({"predictions": preds, "document_id": doc_id, "document_title": doc_title})
+        
+        session = SessionLocal()
+        run = ExperimentRun(
+            model=model,
+            labels_to_extract=labels_to_extract,
+            allow_multilabeling=allow_multilabeling,
+            threshold=threshold,
+            experiment_id=experiment_id,
+            date_ran=datetime.utcnow()
+        )
+        session.add(run)
+        session.commit()
+        session.refresh(run)
+        run_id = run.id
+        session.close()
+        
+        mongo_client = initialize_mongodb()
+        mongo_client.database.ExperimentResults.insert_one({
+            "experiment_run_id": run_id,
+            "results": results
+        })
+        
+        return {
+            "id": run_id,
+            "date_ran": run.date_ran,
+            "model": run.model,
+            "threshold": run.threshold,
+            "labels_to_extract": run.labels_to_extract,
+            "allow_multilabeling": run.allow_multilabeling,
+            "results": results
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Experiment failed: {str(e)}")
 
 @router.get("/experiment-runs/{run_id}/results")
 async def get_experiment_run_results(run_id: int, request: Request, user=Depends(premium_user_required)):
