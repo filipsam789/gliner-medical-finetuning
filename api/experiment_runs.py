@@ -46,6 +46,7 @@ async def add_experiment_run(experiment_id: int, data: dict, request: Request, u
     if not model or labels_to_extract is None or allow_multilabeling is None:
         raise HTTPException(status_code=400, detail="Missing required fields")
     from documents import Document
+    session = SessionLocal()
     docs = session.query(Document).filter(Document.experiment_id == experiment_id).all()
     session.close()
     
@@ -63,7 +64,6 @@ async def add_experiment_run(experiment_id: int, data: dict, request: Request, u
         for doc_id, doc_title, preds in zip(doc_ids, doc_titles, predictions):
             results.append({"predictions": preds, "document_id": doc_id, "document_title": doc_title})
         
-        session = SessionLocal()
         run = ExperimentRun(
             model=model,
             labels_to_extract=labels_to_extract,
