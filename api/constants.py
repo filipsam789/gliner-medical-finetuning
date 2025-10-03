@@ -4,7 +4,7 @@ import os
 DEFAULT_MODEL_NAME = "urchade/gliner_small"
 DEFAULT_MODEL_NAME_FRONTEND = "regular-gliner"
 
-FINETUNED_MODEL_NAME = "finetuned_gliner_model_NCELoss"
+FINETUNED_MODEL_NAME = "tamarastojanova2002/gliner_finetuned"
 FINETUNED_MODEL_NAME_FRONTEND = "contrastive-gliner"
 
 GEMINI_MODEL_NAME_FRONTEND = "gemini-2.5-flash-lite"
