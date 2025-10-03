@@ -146,26 +146,24 @@ const RunExperimentDialog: React.FC<RunExperimentDialogProps> = ({
                 </Select>
               </FormControl>
             </Box>
-            {form.model.toLowerCase().includes("gliner") && (
-              <Box>
-                <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
-                  Confidence Threshold
-                </Typography>
-                <Box sx={{ px: 1, py: 2 }}>
-                  <Slider
-                    value={form.threshold}
-                    onChange={(_, newValue) =>
-                      setForm((f) => ({ ...f, threshold: newValue as number }))
-                    }
-                    min={0}
-                    max={1}
-                    step={0.1}
-                    marks={thresholdSliderMarks}
-                    valueLabelDisplay="auto"
-                  />
-                </Box>
+            <Box>
+              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                Confidence Threshold
+              </Typography>
+              <Box sx={{ px: 1, py: 2 }}>
+                <Slider
+                  value={form.threshold}
+                  onChange={(_, newValue) =>
+                    setForm((f) => ({ ...f, threshold: newValue as number }))
+                  }
+                  min={0}
+                  max={1}
+                  step={0.1}
+                  marks={thresholdSliderMarks}
+                  valueLabelDisplay="auto"
+                />
               </Box>
-            )}
+            </Box>
             <Box>
               <FormControlLabel
                 control={

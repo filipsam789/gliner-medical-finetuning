@@ -37,6 +37,7 @@ const ExperimentsPage: React.FC = () => {
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [newName, setNewName] = useState("");
+  const [newImageUrl, setNewImageUrl] = useState("");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -72,8 +73,9 @@ const ExperimentsPage: React.FC = () => {
     setLoading(true);
     setError("");
     try {
-      await createExperiment(token, newName);
+      await createExperiment(token, newName, newImageUrl || undefined);
       setNewName("");
+      setNewImageUrl("");
       setOpen(false);
       fetchExperiments();
     } catch (err: any) {
@@ -102,14 +104,14 @@ const ExperimentsPage: React.FC = () => {
   return (
     <Box sx={{ p: 4, pt: 10 }}>
       <Box sx={{ textAlign: "center", mb: 4 }}>
-        <Typography 
-          variant="h4" 
-          gutterBottom 
-          sx={{ 
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
             mt: 4,
             fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
             color: "primary.main",
-            mb: 3
+            mb: 3,
           }}
         >
           Experiments
@@ -127,15 +129,15 @@ const ExperimentsPage: React.FC = () => {
           {error}
         </Alert>
       )}
-      <Box 
-        sx={{ 
+      <Box
+        sx={{
           display: "flex",
           flexWrap: "wrap",
           gap: 3,
           justifyContent: "center",
           alignItems: "flex-start",
           maxWidth: "1200px",
-          mx: "auto"
+          mx: "auto",
         }}
       >
         {experiments.map((exp) => (
@@ -186,6 +188,16 @@ const ExperimentsPage: React.FC = () => {
             fullWidth
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            margin="dense"
+            label="Image URL (optional)"
+            fullWidth
+            value={newImageUrl}
+            onChange={(e) => setNewImageUrl(e.target.value)}
+            placeholder="Leave empty for random image"
+            helperText="Enter a URL to a custom image, or leave empty to use a random image"
           />
         </DialogContent>
         <DialogActions>

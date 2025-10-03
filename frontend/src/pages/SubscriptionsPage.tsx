@@ -93,7 +93,7 @@ const SubscriptionsPage: React.FC = () => {
       <Container maxWidth="lg">
         <Box sx={{ textAlign: "center", mb: 6 }}>
           <Typography
-            variant="h2"
+            variant="h3"
             sx={{
               color: "primary.main",
               fontWeight: 700,
@@ -175,17 +175,18 @@ const SubscriptionsPage: React.FC = () => {
                   <Typography
                     component="span"
                     variant="h5"
-                    sx={{ 
-                      color: "text.secondary", 
+                    sx={{
+                      color: "text.secondary",
                       ml: 0.5,
-                      fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                      fontFamily:
+                        '"Inter", system-ui, -apple-system, sans-serif',
                     }}
                   >
                     /month
                   </Typography>
                 </Typography>
-                <Typography 
-                  variant="body2" 
+                <Typography
+                  variant="body2"
                   color="text.secondary"
                   sx={{
                     fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
@@ -220,19 +221,21 @@ const SubscriptionsPage: React.FC = () => {
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography
                         variant="body2"
-                        sx={{ 
-                          fontWeight: 500, 
+                        sx={{
+                          fontWeight: 500,
                           mb: 0.5,
-                          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                          fontFamily:
+                            '"Inter", system-ui, -apple-system, sans-serif',
                         }}
                       >
                         {f.name}
                       </Typography>
-                      <Typography 
-                        variant="body2" 
+                      <Typography
+                        variant="body2"
                         color="text.secondary"
                         sx={{
-                          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                          fontFamily:
+                            '"Inter", system-ui, -apple-system, sans-serif',
                         }}
                       >
                         {f.free}
@@ -357,10 +360,11 @@ const SubscriptionsPage: React.FC = () => {
                   <Typography
                     component="span"
                     variant="h5"
-                    sx={{ 
-                      color: "rgba(255, 255, 255, 0.8)", 
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.8)",
                       ml: 0.5,
-                      fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                      fontFamily:
+                        '"Inter", system-ui, -apple-system, sans-serif',
                     }}
                   >
                     /month
@@ -368,7 +372,7 @@ const SubscriptionsPage: React.FC = () => {
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ 
+                  sx={{
                     color: "rgba(255, 255, 255, 0.9)",
                     fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
                   }}
@@ -404,20 +408,22 @@ const SubscriptionsPage: React.FC = () => {
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography
                         variant="body2"
-                        sx={{ 
-                          fontWeight: 500, 
-                          mb: 0.5, 
+                        sx={{
+                          fontWeight: 500,
+                          mb: 0.5,
                           color: "white",
-                          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                          fontFamily:
+                            '"Inter", system-ui, -apple-system, sans-serif',
                         }}
                       >
                         {f.name}
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ 
+                        sx={{
                           color: "rgba(255, 255, 255, 0.8)",
-                          fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
+                          fontFamily:
+                            '"Inter", system-ui, -apple-system, sans-serif',
                         }}
                       >
                         {f.premium}

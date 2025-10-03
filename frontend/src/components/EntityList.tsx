@@ -6,6 +6,7 @@ interface EntityListProps {
   entities: Array<{
     text: string;
     label: string;
+    score?: number;
   }>;
 }
 
@@ -32,7 +33,7 @@ export const EntityList = ({ entities }: EntityListProps) => {
               alignItems: "center",
               justifyContent: "space-between",
               p: 1.5,
-              backgroundColor: "hsl(0, 0%, 98%)", 
+              backgroundColor: "hsl(0, 0%, 98%)",
               borderRadius: 2,
               border: "1px solid hsla(0, 0%, 81%, 1.00)",
             }}
@@ -51,6 +52,23 @@ export const EntityList = ({ entities }: EntityListProps) => {
               >
                 {entity.text}
               </Typography>
+              {entity.score !== undefined && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "text.secondary",
+                    fontWeight: 500,
+                    ml: "auto",
+                    px: 1,
+                    py: 0.5,
+                    backgroundColor: "rgba(0, 0, 0, 0.04)",
+                    borderRadius: 1,
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  {(entity.score * 100).toFixed(1)}%
+                </Typography>
+              )}
             </Box>
           </Paper>
         ))}

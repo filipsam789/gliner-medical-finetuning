@@ -31,7 +31,7 @@ async def list_experiment_runs(experiment_id: int, request: Request, user=Depend
         "id": r.id,
         "date_ran": r.date_ran,
         "model": r.model,
-        "threshold": r.threshold if "gliner" in r.model.lower() else None,
+        "threshold": r.threshold,
         "labels_to_extract": r.labels_to_extract,
         "allow_multilabeling": r.allow_multilabeling
     } for r in runs]
@@ -80,7 +80,7 @@ async def add_experiment_run(experiment_id: int, data: dict, request: Request, u
         "id": run_id,
         "date_ran": run.date_ran,
         "model": run.model,
-        "threshold": run.threshold if "gliner" in run.model.lower() else None,
+        "threshold": run.threshold,
         "labels_to_extract": run.labels_to_extract,
         "allow_multilabeling": run.allow_multilabeling,
         "results": results

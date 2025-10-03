@@ -8,6 +8,7 @@ import re
 from google import genai
 from google.genai import types
 import constants
+from gliner.data_processing import WordsSplitter
 
 @dataclass
 class EntityResult:
@@ -43,10 +44,19 @@ class GeminiClient:
         
         self.client = genai.Client(api_key=self.api_key)
         self.rate_limiter = RateLimiter(max_requests=15, time_window=60)
+        self.words_splitter = WordsSplitter("whitespace")
     
-    def _create_ner_prompt(self, text: str, entity_types: List[str]) -> str:
+    def _create_ner_prompt(self, text: str, entity_types: List[str], threshold: float = 0.5, multi_label: bool = False) -> str:
         """Create a prompt for named entity recognition using Gemini."""
         entity_types_str = ", ".join(entity_types)
+        
+        threshold_instruction = f"Only return entities with a confidence score of {threshold} or higher."
+        
+        multi_label_instruction = ""
+        if multi_label:
+            multi_label_instruction = "Assign multiple labels to an entity if it fits multiple entity types - create separate entries for each label."
+        else:
+            multi_label_instruction = "Assign only one label per entity - choose the most appropriate single entity type."
         
         prompt = f"""You are a medical named entity recognition expert. Extract the following entity types from the given text: {entity_types_str}.
 
@@ -58,14 +68,16 @@ Please identify and extract all entities of the specified types. For each entity
 3. The start and end character positions in the text
 4. A confidence score between 0 and 1 for the classification of the entity
 
+{threshold_instruction}
+
+{multi_label_instruction}
+
 Format your response as a JSON array where each entity is an object with:
 - "text": the entity text
 - "label": the entity type
 - "start": start position (one-based index)
 - "end": end position (one-based index)
 - "score": confidence score
-
-You can classify one entity into multiple types, but make sure to put them as separate objects in the JSON array.
 
 Example format:
 [
@@ -74,7 +86,7 @@ Example format:
 ]
 
 Only return the JSON array, no additional text."""
-        
+        print(f"Prompt: {prompt}")
         return prompt
     
     def _parse_gemini_response(self, response_text: str) -> List[EntityResult]:
@@ -91,6 +103,7 @@ Only return the JSON array, no additional text."""
             
             for entity_data in entities_data:
                 if all(key in entity_data for key in ['text', 'label', 'start', 'end', 'score']):
+                    print(f"Confidence Score:{entity_data['score']}")
                     entities.append(EntityResult(
                         text=entity_data['text'],
                         label=entity_data['label'],
@@ -110,7 +123,7 @@ Only return the JSON array, no additional text."""
         await self.rate_limiter.acquire()
         
         try:
-            prompt = self._create_ner_prompt(text, entity_types)
+            prompt = self._create_ner_prompt(text, entity_types, threshold, multi_label)
             
             response = self.client.models.generate_content(
                 model="gemini-2.5-flash-lite",

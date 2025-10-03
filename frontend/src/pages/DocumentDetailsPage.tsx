@@ -28,12 +28,12 @@ import { RepresentationResults } from "@/types";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -150,11 +150,10 @@ const DocumentDetailsPage: React.FC = () => {
 
   const formatRunOption = (run: ExperimentRun): string => {
     const date = new Date(run.date_ran).toLocaleDateString();
-    const isGliner = run.model.toLowerCase().includes("gliner");
 
     let option = `Experiment ran on ${date}, with parameters: model - ${run.model}`;
 
-    if (isGliner && run.threshold !== null && run.threshold !== undefined) {
+    if (run.threshold !== null && run.threshold !== undefined) {
       option += `, threshold - ${run.threshold}`;
     }
 

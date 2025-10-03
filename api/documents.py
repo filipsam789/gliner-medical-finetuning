@@ -48,7 +48,10 @@ async def add_document(experiment_id: int, data: dict, request: Request, user=De
     text = data.get("text")
     if not title or not text:
         raise HTTPException(status_code=400, detail="Title and text required")
-    image_url = random.choice(DOCUMENT_IMAGE_URLS)
+    
+    custom_image_url = data.get("image_url")
+    image_url = custom_image_url if custom_image_url else random.choice(DOCUMENT_IMAGE_URLS)
+    
     from datetime import datetime
     session = SessionLocal()
     doc = Document(title=title, text=text, date_added=datetime.utcnow(), image_url=image_url, experiment_id=experiment_id)

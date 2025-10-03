@@ -11,7 +11,7 @@ import {
 interface AddDocumentDialogProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (title: string, text: string) => void;
+  onAdd: (title: string, text: string, imageUrl?: string) => void;
   loading: boolean;
 }
 
@@ -23,11 +23,13 @@ const AddDocumentDialog: React.FC<AddDocumentDialogProps> = ({
 }) => {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
   const handleAdd = () => {
-    onAdd(title, text);
+    onAdd(title, text, imageUrl || undefined);
     setTitle("");
     setText("");
+    setImageUrl("");
   };
 
   return (
@@ -41,6 +43,7 @@ const AddDocumentDialog: React.FC<AddDocumentDialogProps> = ({
           fullWidth
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          sx={{ mb: 2 }}
         />
         <TextField
           margin="dense"
@@ -50,6 +53,16 @@ const AddDocumentDialog: React.FC<AddDocumentDialogProps> = ({
           minRows={3}
           value={text}
           onChange={(e) => setText(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          margin="dense"
+          label="Image URL (optional)"
+          fullWidth
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          placeholder="Leave empty for random image"
+          helperText="Enter a URL to a custom image, or leave empty to use a random image"
         />
       </DialogContent>
       <DialogActions>

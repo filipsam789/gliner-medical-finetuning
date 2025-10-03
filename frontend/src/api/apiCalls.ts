@@ -200,12 +200,13 @@ export const addDocument = async (
   token: string,
   experimentId: string,
   title: string,
-  text: string
+  text: string,
+  imageUrl?: string
 ) => {
   try {
     const response = await axios.post(
       `${API_URL}/experiments/${experimentId}/documents`,
-      { title, text },
+      { title, text, image_url: imageUrl },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -309,12 +310,13 @@ export const getExperiments = async (token: string): Promise<Experiment[]> => {
 
 export const createExperiment = async (
   token: string,
-  name: string
+  name: string,
+  imageUrl?: string
 ): Promise<Experiment> => {
   try {
     const response = await axios.post<Experiment>(
       `${API_URL}/experiments`,
-      { name },
+      { name, image_url: imageUrl },
       {
         headers: {
           Authorization: `Bearer ${token}`,

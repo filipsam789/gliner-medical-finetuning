@@ -23,6 +23,7 @@ interface ExperimentEntitySummaryProps {
 interface AggregatedEntity {
   text: string;
   label: string;
+  score: number;
   documentId: number;
   documentTitle: string;
 }
@@ -69,6 +70,7 @@ const ExperimentEntitySummary: React.FC<ExperimentEntitySummaryProps> = ({
             allEntities.push({
               text: entity.text,
               label: entity.label,
+              score: entity.score,
               documentId: documentResult.document_id,
               documentTitle:
                 documentResult.document_title ||
@@ -93,11 +95,10 @@ const ExperimentEntitySummary: React.FC<ExperimentEntitySummaryProps> = ({
 
   const formatRunOption = (run: ExperimentRun): string => {
     const date = new Date(run.date_ran).toLocaleDateString();
-    const isGliner = run.model.toLowerCase().includes("gliner");
 
     let option = `Experiment ran on ${date}, with parameters: model - ${run.model}`;
 
-    if (isGliner && run.threshold !== null && run.threshold !== undefined) {
+    if (run.threshold !== null && run.threshold !== undefined) {
       option += `, threshold - ${run.threshold}`;
     }
 
@@ -109,12 +110,12 @@ const ExperimentEntitySummary: React.FC<ExperimentEntitySummaryProps> = ({
   if (runs.length === 0) {
     return (
       <Box sx={{ textAlign: "center", py: 6 }}>
-        <Typography 
-          variant="h6" 
+        <Typography
+          variant="h6"
           color="text.secondary"
-          sx={{ 
+          sx={{
             fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
-            fontWeight: 500
+            fontWeight: 500,
           }}
         >
           No experiment runs available
@@ -126,13 +127,13 @@ const ExperimentEntitySummary: React.FC<ExperimentEntitySummaryProps> = ({
   return (
     <Box sx={{ p: 3 }}>
       <Box sx={{ textAlign: "center", mb: 4 }}>
-        <Typography 
-          variant="h4" 
-          gutterBottom 
-          sx={{ 
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
             fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
             color: "primary.main",
-            mb: 3
+            mb: 3,
           }}
         >
           Entity Summary by Experiment Run
@@ -194,12 +195,12 @@ const ExperimentEntitySummary: React.FC<ExperimentEntitySummaryProps> = ({
             </>
           ) : (
             <Box sx={{ textAlign: "center", py: 6 }}>
-              <Typography 
-                variant="h6" 
+              <Typography
+                variant="h6"
                 color="text.secondary"
-                sx={{ 
+                sx={{
                   fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
-                  fontWeight: 500
+                  fontWeight: 500,
                 }}
               >
                 No entities found in the selected experiment run.

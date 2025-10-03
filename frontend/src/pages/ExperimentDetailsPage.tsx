@@ -57,12 +57,16 @@ const ExperimentDetailsPage: React.FC = () => {
     fetchDetails();
   }, [id, token]);
 
-  const handleAddDocument = async (title: string, text: string) => {
+  const handleAddDocument = async (
+    title: string,
+    text: string,
+    imageUrl?: string
+  ) => {
     if (!title.trim() || !text.trim()) return;
     setLoading(true);
     setError("");
     try {
-      await addDocument(token, id, title, text);
+      await addDocument(token, id, title, text, imageUrl);
       setAddOpen(false);
       const data = await getExperimentDetails(token, id);
       setDocuments(data.documents);

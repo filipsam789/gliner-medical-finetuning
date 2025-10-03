@@ -38,7 +38,10 @@ async def create_experiment(data: dict, request: Request, user=Depends(premium_u
     name = data.get("name")
     if not name:
         raise HTTPException(status_code=400, detail="Experiment name required")
-    image_url = random.choice(EXPERIMENT_IMAGE_URLS)
+    
+    custom_image_url = data.get("image_url")
+    image_url = custom_image_url if custom_image_url else random.choice(EXPERIMENT_IMAGE_URLS)
+    
     session = SessionLocal()
     experiment = Experiment(name=name, image_url=image_url, user_id=user["id"])
     session.add(experiment)
