@@ -7,3 +7,9 @@ python-dotenv
 huggingface_hub
 certifi
 pip-system-certs
+PyJWT
+dotenv
+sqlalchemy
+psycopg2-binary
+google-genai
+stripe

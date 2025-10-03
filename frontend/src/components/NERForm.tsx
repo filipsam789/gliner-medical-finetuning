@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Card,
@@ -14,29 +14,96 @@ import {
   Tooltip,
   IconButton,
   Slider,
+  Chip,
 } from "@mui/material";
 import { HelpCircle, Brain } from "lucide-react";
-import { RequestFormData } from "@/types";
+import { RequestFormData, UsageStatus } from "@/types";
 import {
   entity_types_placeholder,
   text_placeholder,
   tooltips,
   thresholdSliderMarks,
+  MODEL_OPTIONS,
 } from "@/utils/constants";
-
+import { getUsageStatus } from "@/api/apiCalls";
+import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
+ 
 interface NERFormProps {
   formData: RequestFormData;
   setFormData: React.Dispatch<React.SetStateAction<RequestFormData>>;
   onSubmit: (e: React.FormEvent) => void;
   isProcessing: boolean;
 }
-
+ 
 export const NERForm = ({
   formData,
   setFormData,
   onSubmit,
   isProcessing,
 }: NERFormProps) => {
+  const { token } = useKeycloakAuth();
+  const [usageStatus, setUsageStatus] = useState<UsageStatus | null>(null);
+  const [validationErrors, setValidationErrors] = useState<{
+    text: string;
+    entity_types: string;
+  }>({
+    text: "",
+    entity_types: "",
+  });
+ 
+  useEffect(() => {
+    const fetchUsageStatus = async () => {
+      if (token) {
+        try {
+          const status = await getUsageStatus(token);
+          setUsageStatus(status);
+        } catch (error) {
+          console.error("Error fetching usage status:", error);
+        }
+      }
+    };
+    fetchUsageStatus();
+  }, [token]);
+ 
+  const isDisabled = usageStatus
+    ? usageStatus.remaining === 0 && !usageStatus.is_premium
+    : false;
+ 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+ 
+    const newValidationErrors = {
+      text: "",
+      entity_types: "",
+    };
+ 
+    if (formData.text.trim().length === 0) {
+      newValidationErrors.text = "Please enter some text to analyze.";
+    }
+ 
+    if (formData.entity_types.trim().length === 0) {
+      newValidationErrors.entity_types =
+        "Please enter at least one entity label.";
+    }
+ 
+    setValidationErrors(newValidationErrors);
+ 
+    if (newValidationErrors.text || newValidationErrors.entity_types) {
+      return;
+    }
+ 
+    await onSubmit(e);
+ 
+    if (token && !usageStatus?.is_premium) {
+      try {
+        const status = await getUsageStatus(token);
+        setUsageStatus(status);
+      } catch (error) {
+        console.error("Error refreshing usage status:", error);
+      }
+    }
+  };
+ 
   return (
     <Card>
       <CardContent sx={{ p: 3 }}>
@@ -49,7 +116,7 @@ export const NERForm = ({
             justifyContent: "center",
           }}
         >
-          <Brain size={25} color="#0a75cdff" />
+          <Brain size={25} color="rgba(37, 150, 190)" />
           <Typography variant="h6" component="h2">
             Configure Analysis
           </Typography>
@@ -57,10 +124,10 @@ export const NERForm = ({
         <Typography variant="body2" sx={{ mb: 3, textAlign: "center" }}>
           Set up your named entity recognition parameters
         </Typography>
-
+ 
         <Box
           component="form"
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           sx={{ display: "flex", flexDirection: "column", gap: 3 }}
         >
           <Box>
@@ -86,14 +153,30 @@ export const NERForm = ({
               minRows={4}
               placeholder={text_placeholder}
               value={formData.text}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, text: e.target.value }))
-              }
+              onChange={(e) => {
+                setFormData((prev) => ({ ...prev, text: e.target.value }));
+                if (validationErrors.text && e.target.value.trim().length > 0) {
+                  setValidationErrors((prev) => ({ ...prev, text: "" }));
+                }
+              }}
               required
               variant="outlined"
+              disabled={isDisabled}
+              error={!!validationErrors.text}
+              helperText={validationErrors.text}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "rgba(37, 150, 190)",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "rgba(37, 150, 190)",
+                  },
+                },
+              }}
             />
           </Box>
-
+ 
           <Box>
             <Box
               sx={{ display: "flex", alignItems: "center", gap: 0.2, mb: 1 }}
@@ -115,17 +198,38 @@ export const NERForm = ({
               fullWidth
               placeholder={entity_types_placeholder}
               value={formData.entity_types}
-              onChange={(e) =>
+              onChange={(e) => {
                 setFormData((prev) => ({
                   ...prev,
                   entity_types: e.target.value,
-                }))
-              }
+                }));
+                if (
+                  validationErrors.entity_types &&
+                  e.target.value.trim().length > 0
+                ) {
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    entity_types: "",
+                  }));
+                }
+              }}
               required
               variant="outlined"
+              error={!!validationErrors.entity_types}
+              helperText={validationErrors.entity_types}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": {
+                    borderColor: "rgba(37, 150, 190)",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "rgba(37, 150, 190)",
+                  },
+                },
+              }}
             />
           </Box>
-
+ 
           <Box
             sx={{
               display: "grid",
@@ -164,10 +268,28 @@ export const NERForm = ({
                   step={0.1}
                   marks={thresholdSliderMarks}
                   valueLabelDisplay="auto"
+                  sx={{
+                    color: "rgba(37, 150, 190)",
+                    "& .MuiSlider-thumb": {
+                      backgroundColor: "rgba(37, 150, 190)",
+                    },
+                    "& .MuiSlider-track": {
+                      backgroundColor: "rgba(37, 150, 190)",
+                    },
+                    "& .MuiSlider-rail": {
+                      backgroundColor: "rgba(37, 150, 190, 0.3)",
+                    },
+                    "& .MuiSlider-mark": {
+                      backgroundColor: "rgba(37, 150, 190, 0.7)",
+                    },
+                    "& .MuiSlider-markActive": {
+                      backgroundColor: "rgba(37, 150, 190)",
+                    },
+                  }}
                 />
               </Box>
             </Box>
-
+ 
             <Box>
               <Box
                 sx={{ display: "flex", alignItems: "center", gap: 0.2, mb: 1 }}
@@ -192,27 +314,60 @@ export const NERForm = ({
                     setFormData((prev) => ({ ...prev, model: e.target.value }))
                   }
                   displayEmpty
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(37, 150, 190)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(37, 150, 190)",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(37, 150, 190)",
+                    },
+                    "& .MuiSelect-icon": {
+                      color: "rgba(37, 150, 190)",
+                    },
+                    "& .MuiMenuItem-root.Mui-selected": {
+                      backgroundColor: "rgba(37, 150, 190, 0.1) !important",
+                      "&:hover": {
+                        backgroundColor: "rgba(37, 150, 190, 0.2) !important",
+                      },
+                    },
+                    "& .MuiMenuItem-root:hover": {
+                      backgroundColor: "rgba(37, 150, 190, 0.08)",
+                    },
+                    "& .MuiMenuItem-root.Mui-selected.MuiButtonBase-root": {
+                      backgroundColor: "rgba(37, 150, 190, 0.1) !important",
+                    },
+                  }}
                 >
-                  <MenuItem value="contrastive-gliner">
-                    Contrastive GLiNER
-                  </MenuItem>
-                  <MenuItem value="regular-gliner">Regular GLiNER</MenuItem>
+                  {Object.entries(MODEL_OPTIONS).map(([key, label]) => (
+                    <MenuItem key={key} value={key}>
+                      {label}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
           </Box>
-
+ 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={formData.allowMultiLabeling}
+                  checked={formData.allow_multi_labeling}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      allowMultiLabeling: e.target.checked,
+                      allow_multi_labeling: e.target.checked,
                     }))
                   }
+                  sx={{
+                    color: "rgba(37, 150, 190)",
+                    "&.Mui-checked": {
+                      color: "rgba(37, 150, 190)",
+                    },
+                  }}
                 />
               }
               label={
@@ -232,7 +387,7 @@ export const NERForm = ({
               }
             />
           </Box>
-
+ 
           <Box sx={{ mb: 1 }}>
             <FormControlLabel
               control={
@@ -244,6 +399,12 @@ export const NERForm = ({
                       allowTrainingUse: e.target.checked,
                     }))
                   }
+                  sx={{
+                    color: "rgba(37, 150, 190)",
+                    "&.Mui-checked": {
+                      color: "rgba(37, 150, 190)",
+                    },
+                  }}
                 />
               }
               label={
@@ -263,17 +424,55 @@ export const NERForm = ({
               }
             />
           </Box>
-
+ 
           <Button
             type="submit"
             variant="contained"
             size="large"
             fullWidth
-            disabled={isProcessing}
-            sx={{ mt: 2 }}
+            disabled={isProcessing || isDisabled}
+            sx={{
+              mt: 2,
+              backgroundColor: "rgba(37, 150, 190)",
+              "&:hover": {
+                backgroundColor: "rgba(45, 170, 210)",
+              },
+              "&:disabled": {
+                backgroundColor: "rgba(0, 0, 0, 0.12)",
+              },
+            }}
           >
-            {isProcessing ? "Processing..." : "Analyze Entities"}
+            {isProcessing
+              ? "Processing..."
+              : isDisabled
+              ? "Daily Limit Reached"
+              : "Analyze Entities"}
           </Button>
+          {usageStatus && (
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+              {usageStatus.is_premium ? null : (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Chip
+                    label={`${usageStatus.used_today || 0}/${
+                      usageStatus.daily_limit || 5
+                    } extractions used today`}
+                    color={usageStatus.remaining === 0 ? "error" : "primary"}
+                    variant="outlined"
+                  />
+                  {usageStatus.remaining === 0 && (
+                    <Typography
+                      variant="body2"
+                      color="error"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      Daily limit reached! Upgrade to Premium for unlimited
+                      access.
+                    </Typography>
+                  )}
+                </Box>
+              )}
+            </Box>
+          )}
         </Box>
       </CardContent>
     </Card>

@@ -5,14 +5,18 @@ import { analyzeEntities } from "@/api/apiCalls";
 import { Header } from "./Header";
 import { NERForm } from "./NERForm";
 import { NERResults } from "./NERResults";
+import { EntitySummary } from "./EntitySummary";
+import { EntityList } from "./EntityList";
 import { RepresentationResults, RequestFormData } from "@/types";
+import { useKeycloakAuth } from "@/contexts/useKeycloakContext";
 
 export const NERHomepage = () => {
+  const { token, userProfile } = useKeycloakAuth();
   const [formData, setFormData] = useState<RequestFormData>({
     text: "",
     entity_types: "",
     threshold: 0.5,
-    allowMultiLabeling: false,
+    allow_multi_labeling: false,
     model: "contrastive-gliner",
     allowTrainingUse: true,
   });
@@ -27,7 +31,7 @@ export const NERHomepage = () => {
     setIsProcessing(true);
     setError(null);
     try {
-      const analysisResults = await analyzeEntities(formData);
+      const analysisResults = await analyzeEntities(formData, token);
       setResults(analysisResults);
     } catch (error) {
       const errorMessage =
@@ -44,7 +48,10 @@ export const NERHomepage = () => {
   useEffect(() => {
     if (results && !isProcessing && resultsRef.current) {
       const handle = window.setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }, 50);
       return () => window.clearTimeout(handle);
     }
@@ -58,6 +65,7 @@ export const NERHomepage = () => {
           background:
             "linear-gradient(180deg, hsl(0 0% 98%), hsl(240 4.8% 95.9%))",
           p: 3,
+          pt: 9,
         }}
       >
         <Box
@@ -79,8 +87,13 @@ export const NERHomepage = () => {
           />
 
           {results && (
-            <Box ref={resultsRef}>
+            <Box
+              ref={resultsRef}
+              sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+            >
               <NERResults results={results} />
+              <EntitySummary entities={results.entities} />
+              <EntityList entities={results.entities} />
             </Box>
           )}
         </Box>

@@ -23,9 +23,6 @@ const findEntityPositionsSequentially = (
         end: index + entity.text.length,
       });
 
-      console.log(entity);
-      console.log(occurrences);
-
       searchStart = index + 1;
     }
 

@@ -11,14 +11,14 @@ export interface Results {
 }
 
 export interface EntityHighlighterProps {
-  results: Results;
+  results: RepresentationResults;
 }
 
 export interface RequestFormData {
   text: string;
   entity_types: string;
   threshold: number;
-  allowMultiLabeling: boolean;
+  allow_multi_labeling: boolean;
   model: string;
   allowTrainingUse: boolean;
 }
@@ -34,4 +34,11 @@ export interface EntityResult {
 export interface RepresentationResults {
   text: string;
   entities: EntityResult[];
+}
+
+export interface UsageStatus {
+  is_premium: boolean;
+  daily_limit?: number;
+  used_today?: number;
+  remaining?: number;
 }

@@ -10,3 +10,21 @@ db.ClientTexts.createIndex(
     background: true
   }
 );
+
+db.createCollection('ExperimentResults');
+
+db.ExperimentResults.createIndex(
+  { "experiment_id": 1 },
+  {
+    name: "experiment_id_idx",
+    background: true
+  }
+);
+
+db.ExperimentResults.createIndex(
+  { "document_id": 1 },
+  {
+    name: "document_id_idx",
+    background: true
+  }
+);

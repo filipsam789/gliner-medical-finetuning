@@ -1,7 +1,7 @@
-import { NERHomepage } from "@/components/NERHomepage";
+import HomePage from "@/components/HomePage";
 
 const Index = () => {
-  return <NERHomepage />;
+  return <HomePage />;
 };
 
 export default Index;

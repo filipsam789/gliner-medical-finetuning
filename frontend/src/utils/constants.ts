@@ -1,4 +1,25 @@
-export const API_URL = "https://gliner-medical.switzerlandnorth.cloudapp.azure.com/api";
+export const API_URL = import.meta.env.VITE_API_URL;
+
+export const DEV_ENVIRONMENT = "development";
+
+export const EMPTY_STRING = "";
+
+export const backendNotAvailableMessage =
+  "The backend service is unavailable. \n Please try again, or contact support if the issue persists.";
+
+export const LOCAL_STORAGE_KEYS = {
+  ID_TOKEN: "idToken",
+  USER_OPTIONS: "UserOptions",
+  USER_PROFILE: "UserProfile",
+};
+
+export const MODEL_OPTIONS = {
+  "contrastive-gliner": "Contrastive GLiNER",
+  "regular-gliner": "Regular GLiNER",
+  "gpt-4": "GPT-4",
+  "claude-sonnet-4": "Claude Sonnet 4.0",
+  "gemini-2.5-flash-lite": "Gemini 2.5 Flash Lite",
+};
 
 export const tooltips = {
   text: "Enter the text you want to analyze for named entities.",

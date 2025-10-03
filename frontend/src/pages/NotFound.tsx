@@ -1,5 +1,10 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import { Frown } from "lucide-react";
 
 const NotFound = () => {
   const location = useLocation();
@@ -9,15 +14,37 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-gray-600">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 underline hover:text-blue-700">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "background.default",
+      }}
+    >
+      <Paper elevation={4} sx={{ p: 6, textAlign: "center", maxWidth: 400 }}>
+  <Frown color="#d32f2f" size={64} style={{ marginBottom: 16 }} />
+        <Typography variant="h2" component="h1" gutterBottom color="error">
+          404
+        </Typography>
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          Oops! Page not found
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          The page you are looking for does not exist or has been moved.
+        </Typography>
+        <Button
+          component={Link}
+          to="/"
+          variant="contained"
+          color="primary"
+          size="large"
+        >
           Return to Home
-        </a>
-      </div>
-    </div>
+        </Button>
+      </Paper>
+    </Box>
   );
 };
 
