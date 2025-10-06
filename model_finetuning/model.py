@@ -1,5 +1,5 @@
 from gliner import GLiNER
-from .info_nce_loss import InfoNCELoss
+from info_nce_loss import InfoNCELoss
 from typing import Optional
 
 import torch
@@ -44,7 +44,7 @@ class ContrastiveGLiNER(GLiNER):
                 negative_span_idx = None,
                 negative_span_mask = None,
                 negative_text_lengths = None,
-                alpha=1e-1, # alpha is the weight for contrastive loss
+                alpha=0.5, # alpha is the weight for contrastive loss
                 **kwargs
                 ):
 
@@ -156,7 +156,7 @@ class ContrastiveGLiNER(GLiNER):
             contrastive_loss = self.infonce_loss(anchor_span_embeddings, pos_span_embeddings, neg_span_embeddings)
 
             # Calculate total loss
-            total_loss = output.loss + alpha * contrastive_loss
+            total_loss = (1 - alpha) * output.loss + alpha * contrastive_loss
 
             output.loss = total_loss
 
